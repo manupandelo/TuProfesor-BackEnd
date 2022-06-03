@@ -1,48 +1,26 @@
-import sql from 'mssql'
-import config from '../../db.js'
 import 'dotenv/config'
+import PeticionHelper from '../Helpers/PeticionHelper'
 
+const ProfesorTabla = process.env.DB_TABLA_Profesor;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
+const UsuarioTabla = process.env.DB_TABLA_Usuario;
 
 export class PeticionService {
 
     getPeticion = async () => {
         console.log('Get All Peticiones');
         let response;
-        const pool = await sql.connect(config);
-        response = await pool.request().query(`SELECT * from ${PeticionTabla}`);
+        let query=`SELECT * from ${PeticionTabla}`
+        response=await PeticionHelper(undefined,peticion,query);
         console.log(response)
         return response.recordset;
     }
 
     getPeticionById = async (id) => {
         console.log('Get Peticion by its ID');
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('id',sql.Int, id)
-            .query(`SELECT * from ${PeticionTabla} where idPeticion = @id`);
-        console.log(response)
-
-        return response.recordset[0];
-    }
-
-    getPeticionByTeacherId = async (id) => {
-        console.log('Get Peticion by the Teacher ID');
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('id',sql.Int, id)
-            .query(`SELECT * from ${PeticionTabla} where idProfesor = @id`);
-        console.log(response)
-
-        return response.recordset[0];
-    }
-
-    getPeticionByUserId = async (id) => {
-        console.log('Get Peticion by the User Id');
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('id',sql.Int, id)
-            .query(`SELECT * from ${PeticionTabla} where idAlumno = @id`);
+        let response;
+        let query=`SELECT * from ${PeticionTabla} where idPeticion = @id`;
+        response=await PeticionHelper(id, undefined, query);
         console.log(response)
 
         return response.recordset[0];
@@ -50,14 +28,10 @@ export class PeticionService {
 
     createPeticion = async (Peticion) => {
         console.log('create Peticion in Peticion Service');
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('nombre',sql.VarChar, Peticion?.nombre ?? '')
-            .input('imagen',sql.VarChar, Peticion?.imagen ?? '')
-            .input('edad',sql.Int, Peticion?.edad ?? 0)
-            .input('peso',sql.Int, Peticion?.peso ?? 0)
-            .input('historia',sql.VarChar, Peticion?.historia ?? '')
-            .query(`INSERT INTO ${PeticionTabla}(nombre, imagen, edad, peso, historia) VALUES (@nombre, @imagen, @edad, @peso, @historia)`);
+        let response;
+        let query=`INSERT INTO ${PeticionTabla}(nombre, imagen, edad, peso, historia) VALUES (@nombre, @imagen, @edad, @peso, @historia)`
+        response=await PeticionHelper(undefined, Peticion, query)
+
         console.log(response)
 
         return response.recordset;
@@ -66,27 +40,19 @@ export class PeticionService {
     updatePeticionById = async (id, Peticion) => {
         console.log('Update Peticion by Id in Peticion Service');
         console.log(id, Peticion)
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('id', sql.Int, id ?? '')
-            .input('Imagen', sql.VarChar, Peticion?.imagen ?? '')
-            .input('Nombre', sql.VarChar, Peticion?.nombre ?? '')
-            .input('Edad', sql.VarChar, Peticion?.edad ?? '')
-            .input('Peso', sql.VarChar, Peticion?.peso ?? '')
-            .input('Historia', sql.VarChar, Peticion?.historia ?? '')
-            .query(`UPDATE ${PeticionTabla} SET imagen = @Imagen, nombre = @Nombre, edad = @Edad, peso = @Peso, historia = @Historia WHERE id = @id`);
+        let response;
+        let query=`UPDATE ${PeticionTabla} SET imagen = @Imagen, nombre = @Nombre, edad = @Edad, peso = @Peso, historia = @Historia WHERE id = @id`;
+        response=await PeticionHelper(id, Peticion, query);
         console.log(response)
 
-        return response.recordset.rowsAffected;
+        return response.recordset;
     }
 
     deletePeticionById = async (id) => {
         console.log('Delete peticion by id in Peticion service');
-
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('id',sql.Int, id)
-            .query(`DELETE FROM ${PeticionTabla} WHERE id = @id`);
+        let response;
+        let query=`DELETE FROM ${PeticionTabla} WHERE id = @id`;
+        response=await PeticionHelper(id, undefined, query);
         console.log(response)
 
         return response.recordset;

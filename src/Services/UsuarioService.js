@@ -1,72 +1,60 @@
-import sql from 'mssql'
-import config from '../../db.js'
 import 'dotenv/config'
+import UsuarioHelper from '../Helpers/UsuarioHelper'
+import PeticionHelper from '../Helpers/PeticionHelper'
 
+const ProfesorTabla = process.env.DB_TABLA_Profesor;
+const PeticionTabla = process.env.DB_TABLA_Peticion;
 const UsuarioTabla = process.env.DB_TABLA_Usuario;
 
 export class UsuarioService {
 
-    getUsuario = async () => {
+    getUsuario = async (filtros) => {
         console.log('Get All Usuarios in Usuario Service');
         let response;
-        const pool = await sql.connect(config);
-        response = await pool.request().query(`SELECT * from ${UsuarioTabla}`);
+        let query=`SELECT * from ${UsuarioTabla}`
+        response=await UsuarioHelper(undefined, filtros, query)
         console.log(response)
         return response.recordset;
     }
 
     getUsuarioById = async (id) => {
         console.log('Get Usuario By Id in Usuario Service');
-
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('id',sql.Int, id)
-            .query(`SELECT * from ${UsuarioTabla} where id = @id`);
+        let response;
+        let query=`SELECT * from ${UsuarioTabla} where id = @id`
+        response=await UsuarioHelper(id, undefined, query);
         console.log(response)
 
-        return response.recordset[0];
+        return response.recordset;
+    }
+
+    getPeticionByUserId = async (id) => {
+        console.log('Get Peticion by the User Id');
+        let response;
+        let query=`SELECT * from ${PeticionTabla} where idAlumno = @id`
+        response=await PeticionHelper(id, undefined, query);
+        console.log(response)
+
+        return response.recordset;
     }
 
     createUsuario = async (Usuario) => {
         console.log('Create New Usuario in Usuario Service');
-        //Ver bien como hacer que se inserten todas las variables y que no esten en nill
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('email',sql.VarChar, Usuario?.email ?? '')
-            .input('password',sql.VarChar, Usuario?.password ?? '')
-            .input('ubicacion',sql.VarChar, Usuario?.ubicacion ?? '')
-            .input('nombre',sql.VarChar, Usuario?.nombre ?? '')
-            .input('apellido',sql.VarChar, Usuario?.apellido ?? '')
-            .query(`INSERT INTO ${UsuarioTabla}(email, password, ubicacion, nombre, apellido) VALUES (@email, @password, @ubicacion, @nombre, @apellido)`);
+        //Ver bien como hacer que se inserten todas las variables y que no esten en null
+        let response;
+        let query=`INSERT INTO ${UsuarioTabla}(email, password, ubicacion, nombre, apellido) VALUES (@Email, @Password, @Ubicacion, @Nombre, @Apellido)`
+        response=await UsuarioHelper(undefined, Usuario, query);
         console.log(response)
 
         return response.recordset;
     }
     
-    updatePassword = async(id, newPassword, oldPassword) => {
-        //Ver Encriptacion para claves
-        let usuario=this.getUsuarioById(id);
-        if(usuario.password==oldPassword){
-            //poner el update de contraseña
-        }
-        else{
-            console.log(error);
-        }
-    }
-
     updateUsuarioById = async (id, Usuario) => {
         //ver encriptacion para claves y/o emails
         console.log('Update Usuario by Id in Usuario Service');
         console.log(id, Usuario)
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('id', sql.Int, id ?? '')
-            .input('Imagen', sql.VarChar, Usuario?.imagen ?? '')
-            .input('Nombre', sql.VarChar, Usuario?.nombre ?? '')
-            .input('Edad', sql.VarChar, Usuario?.edad ?? '')
-            .input('Peso', sql.VarChar, Usuario?.peso ?? '')
-            .input('Historia', sql.VarChar, Usuario?.historia ?? '')
-            .query(`UPDATE ${UsuarioTabla} SET imagen = @Imagen, nombre = @Nombre, edad = @Edad, peso = @Peso, historia = @Historia WHERE id = @id`);
+        let response;
+        let query=`UPDATE ${UsuarioTabla} SET imagen = @Imagen, nombre = @Nombre, edad = @Edad, peso = @Peso, historia = @Historia WHERE id = @id`;
+        response=await UsuarioHelper(id, Usuario, query);
         console.log(response)
 
         return response.recordset;
@@ -74,11 +62,9 @@ export class UsuarioService {
 
     deleteUsuarioById = async (id) => {
         console.log('Delete Usuario by Id in Usuario Service');
-
-        const pool = await sql.connect(config);
-        const response = await pool.request()
-            .input('id',sql.Int, id)
-            .query(`DELETE FROM ${UsuarioTabla} WHERE id = @id`);
+        let response;
+        let query=`DELETE FROM ${UsuarioTabla} WHERE id = @id`;
+        response=await UsuarioHelper(id, undefined, query);
         console.log(response)
 
         return response.recordset;
