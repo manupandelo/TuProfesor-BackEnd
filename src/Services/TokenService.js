@@ -23,7 +23,7 @@ export class TokenService {
                 payload: "custom payload",
                 userEmail: userMail,
                 },
-                process.env.AUTH0_HS256_KEY,
+                process.env.AUTH_HS256_KEY,
                 {
                 issuer: "http://tuprofesor.ort/",
                 subject: userId,

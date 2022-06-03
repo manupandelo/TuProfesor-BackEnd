@@ -6,18 +6,27 @@ const router = Router();
 const usuarioService = new UsuarioService();
 
 router.get('', Authenticate, async (req, res) => {
-  console.log(`This is a get operation`);
-  const Usuarios = await UsuarioService.getUsuario();
+  console.log(`Get Usuarios`);
+  const Usuarios = await usuarioService.getUsuario();
   return res.status(200).json(Usuarios);
 });
 
 router.get('/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
-  console.log(`This is a get operation`);
+  console.log(`Get usuario`);
 
   const Usuario = await usuarioService.getUsuarioById(req.params.id);
 
   return res.status(200).json(Usuario);
+});
+
+router.get('peticion/:id', Authenticate, async (req, res) => {
+  console.log(`Request URL Param: ${req.params.id}`);
+  console.log(`Get Peticiones from an user`);
+
+  const Peticion = await usuarioService.getPeticionByUserId(req.params.id);
+
+  return res.status(200).json(Peticion);
 });
 
 router.post('', Authenticate, async (req, res) => {

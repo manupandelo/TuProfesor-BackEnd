@@ -1,6 +1,7 @@
 import 'dotenv/config'
-import ProfesorHelper from '../Helpers/ProfesorHelper'
-import PeticionHelper from '../Helpers/PeticionHelper'
+import sql from 'mssql'
+import config from '../../../TuProfesor-Backend/db.js'
+
 const ProfesorTabla = process.env.DB_TABLA_Profesor;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
 const UsuarioTabla = process.env.DB_TABLA_Usuario;
@@ -12,7 +13,9 @@ export class ProfesorService {
         let response;
         let query;
         query=`SELECT * from ${UsuarioTabla}`;
-        response=await ProfesorHelper(undefined,{}, query)
+        const pool = await sql.connect(config);
+        response = await pool.request().query(query)
+        
         console.log(response)
         return response.recordset;
     }
@@ -21,7 +24,10 @@ export class ProfesorService {
         console.log('Get Profesor by its ID in Profesor Service');
         let response;
         let query=`SELECT * from ${ProfesorTabla} where id = @id`
-        response = await ProfesorHelper(id, undefined, query);
+        const pool = await sql.connect(config);
+        response = await pool.request()
+        .input('Id',sql.Int, id)
+        .query(query);
         console.log(response)
 
         return response.recordset;
@@ -30,8 +36,11 @@ export class ProfesorService {
     getPeticionByTeacherId = async (id) => {
         console.log('Get Peticion by the Teacher ID');
         let response;
-        let query=`SELECT * from ${PeticionTabla} where idProfesor = @id`;
-        response=await PeticionHelper(id, undefined, query);
+        let query=`SELECT * from ${PeticionTabla} where idProfesor = @Id`;
+        const pool = await sql.connect(config);
+        response = await pool.request()
+        .input('Id',sql.Int, id)
+        .query(query)
         console.log(response)
 
         return response.recordset;
@@ -40,8 +49,20 @@ export class ProfesorService {
     createProfesor = async (Profesor) => {
         console.log('Create New Profesor in Profesor Service');
         let response;
-        let query=`INSERT INTO ${ProfesorTabla}(nombre, imagen, fechacreacion, calificacion) VALUES (@nombre, @imagen, @fechacreacion, 0)`;
-        response=await ProfesorHelper(undefined,Profesor,query);
+        let query=`INSERT INTO ${ProfesorTabla}(nombre, apellido, email, password, borndate, ubicacion, telefono, activo, disponibilidad, tipo) VALUES (@Nombre, @Apellido, @Email, @Password, @Nacimiento, @Ubicacion, @Telefono, @Activo, @Disponibilidad, @TipoClase)`;
+        const pool = await sql.connect(config);
+        response = await pool.request()
+        .input('Nombre',sql.VarChar, Profesor?.nombre ?? '')
+        .input('Apellido',sql.VarChar, Profesor?.apellido ?? '')
+        .input('Email',sql.VarChar, Profesor?.email ?? '')
+        .input('Password',sql.VarChar, Profesor?.password ?? '')
+        .input('Nacimiento',sql.Date, Profesor?.borndate ?? '')
+        .input('Ubicacion',sql.VarChar, Profesor?.ubicacion ?? '')
+        .input('Telefono',sql.Int, Profesor?.telefono ?? '')
+        .input('Activo',sql.Bit, Profesor?.activo ?? 0)
+        .input('Disponibilidad',sql.Date, Profesor?.disponibilidad ?? '')
+        .input('TipoClase',sql.Bit, Profesor?.tipo ?? 0)
+        .query(query)
         console.log(response)
 
         return response.recordset;
@@ -50,8 +71,21 @@ export class ProfesorService {
     updateProfesorById = async (id, Profesor) => {
         console.log('Update Profesor by ID in Profesor Service');
         let response;
-        let query=`UPDATE ${ProfesorTabla} SET titulo = @Nombre, imagen = @Imagen, calificacion = @Calificacion  WHERE id = @Id`;
-        response=await ProfesorHelper(id, Profesor, query);
+        let query=`UPDATE ${ProfesorTabla} SET nombre=@Nombre, apellido=@Apellido, email=@Email, password=@Password, borndate=@Nacimiento, ubicacion=@Ubicacion, telefono=@Telefono, activo=@Activo, disponibilidad=@Disponibilidad, tipo=@TipoClase  WHERE id = @Id`;
+        const pool = await sql.connect(config);
+        response = await pool.request()
+        .input('Id',sql.Int, id)
+        .input('Nombre',sql.VarChar, Profesor?.nombre ?? '')
+        .input('Apellido',sql.VarChar, Profesor?.apellido ?? '')
+        .input('Email',sql.VarChar, Profesor?.email ?? '')
+        .input('Password',sql.VarChar, Profesor?.password ?? '')
+        .input('Nacimiento',sql.Date, Profesor?.borndate ?? '')
+        .input('Ubicacion',sql.VarChar, Profesor?.ubicacion ?? '')
+        .input('Telefono',sql.Int, Profesor?.telefono ?? '')
+        .input('Activo',sql.Bit, Profesor?.activo ?? 0)
+        .input('Disponibilidad',sql.Date, Profesor?.disponibilidad ?? '')
+        .input('TipoClase',sql.Bit, Profesor?.tipo ?? 0)
+        .query(query)
         console.log(response)
 
         return response.recordset;
@@ -60,8 +94,11 @@ export class ProfesorService {
     deleteProfesorById = async (id) => {
         console.log('Delete Profesor by ID in Profesor Service');
         let response;
-        let query=`DELETE FROM ${ProfesorTabla} WHERE id = @id`;
-        response=await ProfesorHelper(id, undefined, query);
+        let query=`DELETE FROM ${ProfesorTabla} WHERE id = @Id`;
+        const pool = await sql.connect(config);
+        response = await pool.request()
+        .input('Id',sql.Int, id)
+        .query(query)
         console.log(response)
 
         return response.recordset;

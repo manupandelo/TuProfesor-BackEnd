@@ -1,6 +1,6 @@
 import 'dotenv/config'
-import UsuarioHelper from '../Helpers/UsuarioHelper'
-import PeticionHelper from '../Helpers/PeticionHelper'
+import sql from 'mssql'
+import config from '../../../TuProfesor-Backend/db.js'
 
 const ProfesorTabla = process.env.DB_TABLA_Profesor;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
@@ -12,7 +12,8 @@ export class UsuarioService {
         console.log('Get All Usuarios in Usuario Service');
         let response;
         let query=`SELECT * from ${UsuarioTabla}`
-        response=await UsuarioHelper(undefined, filtros, query)
+        const pool = await sql.connect(config);
+        response = await pool.request().query(query)
         console.log(response)
         return response.recordset;
     }
@@ -21,7 +22,10 @@ export class UsuarioService {
         console.log('Get Usuario By Id in Usuario Service');
         let response;
         let query=`SELECT * from ${UsuarioTabla} where id = @id`
-        response=await UsuarioHelper(id, undefined, query);
+        const pool = await sql.connect(config);
+        response = await pool.request()
+        .input('Id',sql.Int, id)
+        .query(query);
         console.log(response)
 
         return response.recordset;
@@ -31,7 +35,10 @@ export class UsuarioService {
         console.log('Get Peticion by the User Id');
         let response;
         let query=`SELECT * from ${PeticionTabla} where idAlumno = @id`
-        response=await PeticionHelper(id, undefined, query);
+        const pool = await sql.connect(config);
+        response = await pool.request()
+        .input('Id',sql.Int, id)
+        .query(query)
         console.log(response)
 
         return response.recordset;
@@ -42,7 +49,14 @@ export class UsuarioService {
         //Ver bien como hacer que se inserten todas las variables y que no esten en null
         let response;
         let query=`INSERT INTO ${UsuarioTabla}(email, password, ubicacion, nombre, apellido) VALUES (@Email, @Password, @Ubicacion, @Nombre, @Apellido)`
-        response=await UsuarioHelper(undefined, Usuario, query);
+        const pool = await sql.connect(config);
+        response = await pool.request()
+        .input('Nombre',sql.VarChar, Usuario?.nombre ?? '')
+        .input('Apellido',sql.VarChar, Usuario?.apellido ?? '')
+        .input('Ubicacion',sql.VarChar, Usuario?.ubicacion ?? '')
+        .input('Email',sql.VarChar, Usuario?.email ?? '')
+        .input('Password',sql.VarChar, Usuario?.password ?? '')
+        .query(query);
         console.log(response)
 
         return response.recordset;
@@ -53,8 +67,16 @@ export class UsuarioService {
         console.log('Update Usuario by Id in Usuario Service');
         console.log(id, Usuario)
         let response;
-        let query=`UPDATE ${UsuarioTabla} SET imagen = @Imagen, nombre = @Nombre, edad = @Edad, peso = @Peso, historia = @Historia WHERE id = @id`;
-        response=await UsuarioHelper(id, Usuario, query);
+        let query=`UPDATE ${UsuarioTabla} SET apellido = @Apellido, nombre = @Nombre, ubicacion = @Ubicacion, email = @Email, password = @Password WHERE id = @id`;
+        const pool = await sql.connect(config);
+        response = await pool.request()
+        .input('Id',sql.Int, id)
+        .input('Nombre',sql.VarChar, Usuario?.nombre ?? '')
+        .input('Apellido',sql.VarChar, Usuario?.apellido ?? '')
+        .input('Ubicacion',sql.VarChar, Usuario?.ubicacion ?? '')
+        .input('Email',sql.VarChar, Usuario?.email ?? '')
+        .input('Password',sql.VarChar, Usuario?.password ?? '')
+        .query(query);
         console.log(response)
 
         return response.recordset;
@@ -64,7 +86,10 @@ export class UsuarioService {
         console.log('Delete Usuario by Id in Usuario Service');
         let response;
         let query=`DELETE FROM ${UsuarioTabla} WHERE id = @id`;
-        response=await UsuarioHelper(id, undefined, query);
+        const pool = await sql.connect(config);
+        response = await pool.request()
+        .input('Id',sql.Int, id)
+        .query(query);
         console.log(response)
 
         return response.recordset;
