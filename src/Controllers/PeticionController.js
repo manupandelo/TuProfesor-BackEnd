@@ -5,7 +5,7 @@ import { PeticionService } from '../Services/PeticionService.js';
 const router = Router();
 const peticionService = new PeticionService();
 
-router.get('/all', Authenticate, async (req, res) => {
+router.get('', Authenticate, async (req, res) => {
   console.log(`This is a get operation`);
   const Peticions = await peticionService.getPeticion();
   return res.status(200).json(Peticions);
@@ -22,10 +22,13 @@ router.get('/:id', Authenticate, async (req, res) => {
 
 router.post('', Authenticate, async (req, res) => {
   console.log(`Create Peticion`);
-
-  const Peticion = await peticionService.createPeticion(req.body);
-
-  return res.status(201).json(Peticion);
+  if(!req.body.idProfesor || !req.body.idAlumno || !req.body.horario){
+    return res.status(400);
+  }
+  else{
+    const Peticion = await peticionService.createPeticion(req.body);
+    return res.status(201).json(Peticion);
+  }
 });
 
 router.put('/:id', Authenticate, async (req, res) => {

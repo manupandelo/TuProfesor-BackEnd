@@ -5,6 +5,7 @@ import config from '../../../TuProfesor-Backend/db.js'
 const ProfesorTabla = process.env.DB_TABLA_Profesor;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
 const UsuarioTabla = process.env.DB_TABLA_Usuario;
+const ReviewTabla = process.env.DB_TABLA_Review;
 
 export class ProfesorService {
 
@@ -22,15 +23,20 @@ export class ProfesorService {
 
     getProfesorById = async (id) => {
         console.log('Get Profesor by its ID in Profesor Service');
-        let response;
-        let query=`SELECT * from ${ProfesorTabla} where id = @id`
+        let query1=`SELECT * from ${ProfesorTabla} where id = @id`
+        let query2=`SELECT * from ${ReviewTabla} where idProfesor = @id`
         const pool = await sql.connect(config);
-        response = await pool.request()
+        let Profesor = await pool.request()
         .input('Id',sql.Int, id)
         .query(query);
-        console.log(response)
 
-        return response.recordset;
+        let Reviews =await pool.request()
+        .input('Id',sql.Int, id)
+        .query(query2);
+        console.log(Reviews)
+
+        Profesor.recordset[0].Reviews=Reviews.recordset;
+        return Profesor.recordset;
     }
 
     getPeticionByTeacherId = async (id) => {
@@ -50,6 +56,7 @@ export class ProfesorService {
         console.log('Create New Profesor in Profesor Service');
         let response;
         let query=`INSERT INTO ${ProfesorTabla}(nombre, apellido, email, password, borndate, ubicacion, telefono, activo, disponibilidad, tipo) VALUES (@Nombre, @Apellido, @Email, @Password, @Nacimiento, @Ubicacion, @Telefono, @Activo, @Disponibilidad, @TipoClase)`;
+        
         const pool = await sql.connect(config);
         response = await pool.request()
         .input('Nombre',sql.VarChar, Profesor?.nombre ?? '')
@@ -71,7 +78,40 @@ export class ProfesorService {
     updateProfesorById = async (id, Profesor) => {
         console.log('Update Profesor by ID in Profesor Service');
         let response;
+        count=false;
         let query=`UPDATE ${ProfesorTabla} SET nombre=@Nombre, apellido=@Apellido, email=@Email, password=@Password, borndate=@Nacimiento, ubicacion=@Ubicacion, telefono=@Telefono, activo=@Activo, disponibilidad=@Disponibilidad, tipo=@TipoClase  WHERE id = @Id`;
+        if(Profesor.email){
+            query+=` email=@Email`
+            count=true;
+        }if(Profesor.password){
+            if(count=true){
+                query+=`, password=@Password`
+            }else{
+                query=` password=@Password`
+                count=true;
+            }
+        }if(Profesor.telefono){
+            if(count=true){
+                query+=`, telefono=@Telefono`
+            }else{
+                query=` telefono=@Telefono`
+                count=true;
+            }
+        }if(Profesor.ubicacion){
+            if(count=true){
+                query+=`, ubicacion=@Ubicacion`
+            }else{
+                query=` ubicacion=@Ubicacion`
+                count=true;
+            }
+        }if(Profesor.telefono){
+            if(count=true){
+                query+=`, telefono=@Telefono`
+            }else{
+                query=` Telefono=@Telefono`
+                count=true;
+            }
+        }
         const pool = await sql.connect(config);
         response = await pool.request()
         .input('Id',sql.Int, id)

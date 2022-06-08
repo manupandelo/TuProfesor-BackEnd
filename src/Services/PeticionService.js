@@ -34,13 +34,19 @@ export class PeticionService {
     createPeticion = async (Peticion) => {
         console.log('create Peticion in Peticion Service');
         let response;
-        let query=`INSERT INTO ${PeticionTabla}(idAlumno, idProfesor, detalles, telefonoalumno, horario) VALUES (@IdAlumno, @IdProfesor, @Detalles, @TelefonoAlumno, @Horario)`
+        let query=`INSERT INTO ${PeticionTabla}(idAlumno, idProfesor, detalles, horario) VALUES (@IdAlumno, @IdProfesor, @Detalles, @Horario)`
+        if(!Peticion.idProfesor){
+            response="error, llenar todos los datos";
+        }if(!Peticion.idAlumno){
+            response="error, llenar todos los datos";
+        }if(!Peticion.horario){
+            response="error, llenar todos los datos";
+        }
         const pool = await sql.connect(config);
         response = await pool.request()
         .input('IdProfesor',sql.Int, Peticion?.idProfesor ?? 0)
         .input('IdAlumno',sql.Int, Peticion?.idAlumno ?? 0)
         .input('Detalles',sql.VarChar, Peticion?.detalles ?? '')
-        .input('TelefonoAlumno',sql.Int, Peticion?.telefonoalumno ?? 0)
         .input('Horario',sql.DateTime, Peticion?.horario ?? '')
         .query(query);
 

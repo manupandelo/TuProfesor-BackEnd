@@ -29,6 +29,15 @@ router.get('peticion/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Peticion);
 });
 
+router.get('reviews/:id', Authenticate, async (req, res) => {
+  console.log(`Request URL Param: ${req.params.id}`);
+  console.log(`Get Peticiones from an user`);
+
+  const Peticion = await usuarioService.getReviewByUserId(req.params.id);
+
+  return res.status(200).json(Peticion);
+});
+
 router.post('', Authenticate, async (req, res) => {
   console.log(`This is a post operation`);
 
