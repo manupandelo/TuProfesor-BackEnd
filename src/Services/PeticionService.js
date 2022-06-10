@@ -1,7 +1,5 @@
 import 'dotenv/config'
-import sql from 'mssql'
-import config from '../../../TuProfesor-Backend/db.js'
-
+import peticionHelper from '../Helpers/PeticionHelper.js'
 const ProfesorTabla = process.env.DB_TABLA_Profesor;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
 const UsuarioTabla = process.env.DB_TABLA_Usuario;
@@ -12,8 +10,8 @@ export class PeticionService {
         console.log('Get All Peticiones');
         let response;
         let query=`SELECT * from ${PeticionTabla}`
-        const pool = await sql.connect(config);
-        response = await pool.request().query(query)
+      
+        response = await peticionHelper(undefined, query);
         console.log(response)
         return response.recordset;
     }
@@ -22,10 +20,7 @@ export class PeticionService {
         console.log('Get Peticion by its ID');
         let response;
         let query=`SELECT * from ${PeticionTabla} where idPeticion = @id`;
-        const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('Id',sql.Int, id)
-        .query(query);
+        response=await peticionHelper({id}, query)
         console.log(response)
 
         return response.recordset;
@@ -35,14 +30,7 @@ export class PeticionService {
         console.log('create Peticion in Peticion Service');
         let response;
         let query=`INSERT INTO ${PeticionTabla}(idAlumno, idProfesor, detalles, horario) VALUES (@IdAlumno, @IdProfesor, @Detalles, @Horario)`
-        const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('IdProfesor',sql.Int, Peticion?.idProfesor ?? 0)
-        .input('IdAlumno',sql.Int, Peticion?.idAlumno ?? 0)
-        .input('Detalles',sql.VarChar, Peticion?.detalles ?? '')
-        .input('Horario',sql.DateTime, Peticion?.horario ?? '')
-        .query(query);
-
+        response=peticionHelper({Peticion},query);
         console.log(response)
         return response.recordset;
     }
@@ -67,15 +55,7 @@ export class PeticionService {
                 query=`UPDATE ${PeticionTabla} SET detalles=@Detalles, horario=@Horario WHERE idPeticion = @id`;
             }
         }
-        const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('Id',sql.Int, id)
-        .input('IdAlumno',sql.Int, Peticion?.idProfesor ?? 0)
-        .input('IdProfesor',sql.Int, Peticion?.idAlumno ?? 0)
-        .input('Detalles',sql.VarChar, Peticion?.detalles ?? '')
-        .input('TelefonoAlumno',sql.Int, Peticion?.telefonoalumno ?? 0)
-        .input('Horario',sql.DateTime, Peticion?.horario ?? '')
-        .query(query);
+        response = await peticionHelper({peticion, id},query);
         console.log(response)
 
         return response.recordset;
@@ -86,9 +66,7 @@ export class PeticionService {
         let response;
         let query=`DELETE FROM ${PeticionTabla} WHERE idPeticion = @id`;
         const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('Id',sql.Int, id)
-        .query(query)
+        response = await peticionHelper(undefined,query);
         console.log(response)
 
         return response.recordset;

@@ -23,7 +23,7 @@ router.get('/:id', Authenticate, async (req, res) => {
 router.post('', Authenticate, async (req, res) => {
   console.log(`Create Peticion`);
   if(!req.body.idProfesor || !req.body.idAlumno || !req.body.horario || !req.body.detalles){
-    return res.status(400);
+    return res.status(400).json("Llenar todos los datos");
   }
   else{
     const Peticion = await peticionService.createPeticion(req.body);

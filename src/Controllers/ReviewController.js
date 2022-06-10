@@ -23,7 +23,7 @@ router.get('/:id', Authenticate, async (req, res) => {
 router.post('', Authenticate, async (req, res) => {
   console.log(`Create Review`);
   if(!req.body.idProfesor || !req.body.idAlumno || !req.body.nombre || !req.body.calificacion || req.body.califacion>5 || req.body.califacion<=0){
-    return res.status(400);
+    return res.status(400).json("Llenar todos los datos");
   }
   else{  
     const Reviews = await reviewService.createReview(req.body);

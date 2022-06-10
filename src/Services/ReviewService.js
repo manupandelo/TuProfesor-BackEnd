@@ -1,6 +1,5 @@
 import 'dotenv/config'
-import sql from 'mssql'
-import config from '../../../TuProfesor-Backend/db.js'
+import ReviewHelper from '../Helpers/ReviewHelper.js'
 
 const ProfesorTabla = process.env.DB_TABLA_Profesor;
 const ReviewTabla = process.env.DB_TABLA_Review;
@@ -11,8 +10,7 @@ export class ReviewService {
         console.log('Get All Reviews');
         let response;
         let query=`SELECT * from ${ReviewTabla}`
-        const pool = await sql.connect(config);
-        response = await pool.request().query(query)
+        response=ReviewHelper(undefined, query)
         console.log(response)
         return response.recordset;
     }
@@ -22,11 +20,8 @@ export class ReviewService {
         let response;
         let query=`SELECT * from ${ReviewTabla} where idReview = @Id`;
         const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('Id',sql.Int, id)
-        .query(query);
+        response=ReviewHelper({id}, query)
         console.log(response)
-
         return response.recordset;
     }
 
@@ -34,15 +29,7 @@ export class ReviewService {
         console.log('create Review in Review Service');
         let response;
         let query=`INSERT INTO ${ReviewTabla}(idAlumno, idProfesor, calificacion, nombre, descripcion) VALUES (@IdAlumno, @IdProfesor, @Calificacion, @Nombre, @Descripcion)`
-        const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('IdProfesor',sql.Int, Review?.idProfesor ?? 0)
-        .input('IdAlumno',sql.Int, Review?.idAlumno ?? 0)
-        .input('Detalles',sql.VarChar, Review?.detalles ?? '')
-        .input('Horario',sql.DateTime, Review?.califacion ?? 1)
-        .input('Descripcion', sql.VarChar, Review?.descripcion ?? '')
-        .query(query);
-
+        response=ReviewHelper({Review}, query)
         console.log(response)
         return response.recordset;
     }
@@ -67,15 +54,8 @@ export class ReviewService {
                 query=`update ${ReviewTabla} SET descripcion=@Descripcion, calificacion=@Calificacion where idReview=@Id`
             }
         }
-        
-        const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('Id',sql.Int, id)
-        .input('Calificacion',sql.Int, Review?.calificacion ?? 0)
-        .input('Descripcion',sql.VarChar, Review?.descripcion ?? '')
-        .query(query);
+        response=ReviewHelper({id, Review}, query)
         console.log(response)
-
         return response.recordset;
     }
 
@@ -83,10 +63,7 @@ export class ReviewService {
         console.log('Delete Review by id in Review service');
         let response;
         let query=`DELETE FROM ${ReviewTabla} WHERE idReview = @id`;
-        const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('Id',sql.Int, id)
-        .query(query)
+        response=ReviewHelper(undefined, query)
         console.log(response)
 
         return response.recordset;

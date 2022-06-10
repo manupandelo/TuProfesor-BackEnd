@@ -1,8 +1,9 @@
 import 'dotenv/config'
-import sql from 'mssql'
-import config from '../../../TuProfesor-Backend/db.js'
+import UsuarioHelper from '../Helpers/PeticionHelper.js'
+import peticionHelper from '../Helpers/PeticionHelper.js'
+import ReviewHelper from '../Helpers/ReviewHelper.js'
 
-const ProfesorTabla = process.env.DB_TABLA_Profesor;
+const ReviewTabla = process.env.DB_TABLA_Review;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
 const UsuarioTabla = process.env.DB_TABLA_Usuario;
 
@@ -12,8 +13,7 @@ export class UsuarioService {
         console.log('Get All Usuarios in Usuario Service');
         let response;
         let query=`SELECT * from ${UsuarioTabla}`
-        const pool = await sql.connect(config);
-        response = await pool.request().query(query)
+        response=UsuarioHelper(undefined,query);
         console.log(response)
         return response.recordset;
     }
@@ -22,12 +22,8 @@ export class UsuarioService {
         console.log('Get Usuario By Id in Usuario Service');
         let response;
         let query=`SELECT * from ${UsuarioTabla} where id = @id`
-        const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('Id',sql.Int, id)
-        .query(query);
+        response=UsuarioHelper({id},query);
         console.log(response)
-
         return response.recordset;
     }
 
@@ -35,12 +31,17 @@ export class UsuarioService {
         console.log('Get Peticion by the User Id');
         let response;
         let query=`SELECT * from ${PeticionTabla} where idAlumno = @id`
-        const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('Id',sql.Int, id)
-        .query(query)
+        response=peticionHelper({id}, query);
         console.log(response)
+        return response.recordset;
+    }
 
+    getReviewByUserId = async (id) => {
+        console.log('Get Peticion by the User Id');
+        let response;
+        let query=`SELECT * from ${ReviewTabla} where idAlumno = @id`
+        response=ReviewHelper({id}, query);
+        console.log(response)
         return response.recordset;
     }
 
@@ -49,16 +50,8 @@ export class UsuarioService {
         //Ver bien como hacer que se inserten todas las variables y que no esten en null
         let response;
         let query=`INSERT INTO ${UsuarioTabla}(email, password, ubicacion, nombre, apellido) VALUES (@Email, @Password, @Ubicacion, @Nombre, @Apellido)`
-        const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('Nombre',sql.VarChar, Usuario?.nombre ?? '')
-        .input('Apellido',sql.VarChar, Usuario?.apellido ?? '')
-        .input('Ubicacion',sql.VarChar, Usuario?.ubicacion ?? '')
-        .input('Email',sql.VarChar, Usuario?.email ?? '')
-        .input('Password',sql.VarChar, Usuario?.password ?? '')
-        .query(query);
+        response=UsuarioHelper({Usuario}, query);
         console.log(response)
-
         return response.recordset;
     }
     
@@ -91,30 +84,20 @@ export class UsuarioService {
             }
             count++;
         }
-        if(count==0){response="Nothing to change"}
+        if(count==0){return "Nada que cambiar"}
         else{
-            const pool = await sql.connect(config);
-            response = await pool.request()
-            .input('Id',sql.Int, id)
-            .input('Ubicacion',sql.VarChar, Usuario?.ubicacion ?? '')
-            .input('Email',sql.VarChar, Usuario?.email ?? '')
-            .input('Password',sql.VarChar, Usuario?.password ?? '')
-            .query(query);
+            response=UsuarioHelper({id, Usuario}, query);
+            console.log(response)
+            return response.recordset;
         }
-        console.log(response)
-        return response.recordset;
     }
 
     deleteUsuarioById = async (id) => {
         console.log('Delete Usuario by Id in Usuario Service');
         let response;
         let query=`DELETE FROM ${UsuarioTabla} WHERE id = @id`;
-        const pool = await sql.connect(config);
-        response = await pool.request()
-        .input('Id',sql.Int, id)
-        .query(query);
+        response=UsuarioHelper(undefined, query);
         console.log(response)
-
         return response.recordset;
     }
 }
