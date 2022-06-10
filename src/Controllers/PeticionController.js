@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Authenticate } from '../common/jwt.strategy.js';
+import { Authenticate } from '../Common/jwt.strategy.js';
 import { PeticionService } from '../Services/PeticionService.js';
 
 const router = Router();

@@ -9,11 +9,11 @@ const ReviewTabla = process.env.DB_TABLA_Review;
 
 export class ProfesorService {
 
-    getProfesor = async (name, materia, ubicacion, tipoclase,) => {
+    getProfesor = async (materia, ubicacion, tipoclase,) => {
         console.log('Get all Profesores by user preferences in Profesor Service');
         let response;
         let query;
-        query=`SELECT * from ${UsuarioTabla}`;
+        query=`SELECT * from ${ProfesorTabla}`;
         const pool = await sql.connect(config);
         response = await pool.request().query(query)
         

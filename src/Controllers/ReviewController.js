@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { Authenticate } from '../common/jwt.strategy.js';
+import { Authenticate } from '../Common/jwt.strategy.js';
 import { ReviewService } from '../Services/ReviewService.js';
 
 const router = Router();
-const reviewService = new reviewService();
+const reviewService = new ReviewService();
 
 router.get('', Authenticate, async (req, res) => {
   console.log(`This is a get operation`);

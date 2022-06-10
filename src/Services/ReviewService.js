@@ -7,7 +7,7 @@ const ReviewTabla = process.env.DB_TABLA_Review;
 const UsuarioTabla = process.env.DB_TABLA_Usuario;
 export class ReviewService {
 
-    getReview = async () => {
+    getReviews = async () => {
         console.log('Get All Reviews');
         let response;
         let query=`SELECT * from ${ReviewTabla}`

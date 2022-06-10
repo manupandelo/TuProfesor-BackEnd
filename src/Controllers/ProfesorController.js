@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Authenticate } from '../common/jwt.strategy.js';
+import { Authenticate } from '../Common/jwt.strategy.js';
 import { ProfesorService } from '../Services/ProfesorService.js';
 
 const router = Router();
