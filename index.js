@@ -9,7 +9,6 @@ import ReviewRouter from "./src/controllers/ReviewController.js";
 import TokenRouter from "./src/controllers/TokenController.js";
 
 const app = express();
-const port = 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -22,6 +21,6 @@ app.use("/peticiones", PeticionRouter);
 app.use("/reviews", ReviewRouter);
 app.use("/auth", TokenRouter);
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`Live at ${process.env.PORT || 5000}`);
+})
