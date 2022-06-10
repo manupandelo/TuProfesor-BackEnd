@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import passport from 'passport';
-import { jwtStrategy } from './src/common/jwt.strategy.js';
+import jwtStrategy from './src/common/jwt.strategy.js';
 import UsuarioRouter from "./src/controllers/UsuarioController.js";
 import ProfesorRouter from "./src/controllers/ProfesorController.js";
 import PeticionRouter from "./src/controllers/PeticionController.js";

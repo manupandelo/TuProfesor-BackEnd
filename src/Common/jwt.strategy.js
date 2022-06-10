@@ -9,13 +9,15 @@ const opt = {
   algorithms: ["HS256"],
 };
 
-export const jwtStrategy = new Strategy(opt, (jwt_payload, done) => {
+const jwtStrategy = new Strategy(opt, (jwt_payload, done) => {
   if (!jwt_payload) {
     done(true);
   } else {
     done(null, jwt_payload);
   }
 });
+
+export default jwtStrategy;
 
 export const Authenticate = (req, res, next) => {
   passport.authenticate(jwtStrategy, (err, user) => {
