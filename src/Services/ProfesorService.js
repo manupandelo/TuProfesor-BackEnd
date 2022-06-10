@@ -28,7 +28,7 @@ export class ProfesorService {
         const pool = await sql.connect(config);
         let Profesor = await pool.request()
         .input('Id',sql.Int, id)
-        .query(query);
+        .query(query1);
 
         let Reviews =await pool.request()
         .input('Id',sql.Int, id)
@@ -78,40 +78,48 @@ export class ProfesorService {
     updateProfesorById = async (id, Profesor) => {
         console.log('Update Profesor by ID in Profesor Service');
         let response;
-        count=false;
-        let query=`UPDATE ${ProfesorTabla} SET nombre=@Nombre, apellido=@Apellido, email=@Email, password=@Password, borndate=@Nacimiento, ubicacion=@Ubicacion, telefono=@Telefono, activo=@Activo, disponibilidad=@Disponibilidad, tipo=@TipoClase  WHERE id = @Id`;
+        let count=0;
+        let comma=false
+        let query=`UPDATE ${ProfesorTabla} SET`;
         if(Profesor.email){
             query+=` email=@Email`
-            count=true;
+            comma=true;
+            count++;
         }if(Profesor.password){
-            if(count=true){
+            if(comma==true){
                 query+=`, password=@Password`
             }else{
                 query=` password=@Password`
-                count=true;
+                comma=true;
             }
+            count++;
         }if(Profesor.telefono){
-            if(count=true){
+            if(comma==true){
                 query+=`, telefono=@Telefono`
             }else{
                 query=` telefono=@Telefono`
-                count=true;
+                comma=true;
             }
+            count++;
         }if(Profesor.ubicacion){
-            if(count=true){
+            if(comma==true){
                 query+=`, ubicacion=@Ubicacion`
             }else{
                 query=` ubicacion=@Ubicacion`
-                count=true;
+                comma=true;
             }
         }if(Profesor.telefono){
-            if(count=true){
+            if(comma==true){
                 query+=`, telefono=@Telefono`
             }else{
                 query=` Telefono=@Telefono`
-                count=true;
+                comma=true;
             }
+            count++;
         }
+        if(count==0){response="Nothing to change"}
+        else{
+        query+=`where id=@Id`;
         const pool = await sql.connect(config);
         response = await pool.request()
         .input('Id',sql.Int, id)
@@ -127,7 +135,7 @@ export class ProfesorService {
         .input('TipoClase',sql.Bit, Profesor?.tipo ?? 0)
         .query(query)
         console.log(response)
-
+        }
         return response.recordset;
     }
 

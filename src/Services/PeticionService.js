@@ -35,13 +35,6 @@ export class PeticionService {
         console.log('create Peticion in Peticion Service');
         let response;
         let query=`INSERT INTO ${PeticionTabla}(idAlumno, idProfesor, detalles, horario) VALUES (@IdAlumno, @IdProfesor, @Detalles, @Horario)`
-        if(!Peticion.idProfesor){
-            response="error, llenar todos los datos";
-        }if(!Peticion.idAlumno){
-            response="error, llenar todos los datos";
-        }if(!Peticion.horario){
-            response="error, llenar todos los datos";
-        }
         const pool = await sql.connect(config);
         response = await pool.request()
         .input('IdProfesor',sql.Int, Peticion?.idProfesor ?? 0)
@@ -51,7 +44,6 @@ export class PeticionService {
         .query(query);
 
         console.log(response)
-
         return response.recordset;
     }
 
@@ -59,7 +51,22 @@ export class PeticionService {
         console.log('Update Peticion by Id in Peticion Service');
         console.log(id, Peticion)
         let response;
-        let query=`UPDATE ${PeticionTabla} SET detalles=@Detalles, telefonoalumno=@TelefonoAlumno, horario=@Horario WHERE idPeticion = @id`;
+        let query;
+        if(!Peticion.detalles){
+            if(!Peticion.horario){
+               return "Nada que cambiar";
+            }else{
+                query=`update ${PeticionTabla} SET horario=@Horario where idPeticion=@Id`
+            }
+        }
+        else{
+            if(!Peticion.horario){
+                query=`update ${PeticionTabla} SET detalles=@Detalles where idPeticion=@Id`
+            }
+            else{
+                query=`UPDATE ${PeticionTabla} SET detalles=@Detalles, horario=@Horario WHERE idPeticion = @id`;
+            }
+        }
         const pool = await sql.connect(config);
         response = await pool.request()
         .input('Id',sql.Int, id)

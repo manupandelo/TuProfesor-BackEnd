@@ -40,10 +40,13 @@ router.get('reviews/:id', Authenticate, async (req, res) => {
 
 router.post('', Authenticate, async (req, res) => {
   console.log(`This is a post operation`);
-
-  const Usuario = await usuarioService.createUsuario(req.body);
-
-  return res.status(201).json(Usuario);
+  if(!req.body.email || !req.body.password || !req.body.nombre || !req.body.apellido || !req.body.ubicacion){
+    return res.status(400);
+  }
+  else{
+    const Usuario = await usuarioService.createUsuario(req.body);
+    return res.status(201).json(Usuario);
+  }
 });
 
 router.put('/:id', Authenticate, async (req, res) => {
