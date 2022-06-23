@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "node index.js",
     "start": "node index.js",
-    "install": "npm ci"
+    "install": "npm i"
   },
   "repository": {
     "type": "git",
