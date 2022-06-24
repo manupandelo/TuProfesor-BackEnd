@@ -67,4 +67,8 @@ router.delete('/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Usuario);
 });
 
+router.get('/holamundo', async (req, res) => {
+    return res.status(200).json("Hola Mundo");
+});
+
 export default router;
