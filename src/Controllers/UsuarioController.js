@@ -6,41 +6,33 @@ const router = Router();
 const usuarioService = new UsuarioService();
 
 router.get('', Authenticate, async (req, res) => {
-  console.log(`Get Usuarios`);
+  console.log(`This is a get operation`);
   const Usuarios = await usuarioService.getUsuario();
   return res.status(200).json(Usuarios);
 });
 
 router.get('/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
-  console.log(`Get usuario`);
+  console.log(`This is a get operation`);
 
   const Usuario = await usuarioService.getUsuarioById(req.params.id);
 
   return res.status(200).json(Usuario);
 });
 
-router.get('peticion/:id', Authenticate, async (req, res) => {
-  console.log(`Request URL Param: ${req.params.id}`);
-  console.log(`Get Peticiones from an user`);
-
-  const Peticion = await usuarioService.getPeticionByUserId(req.params.id);
-
-  return res.status(200).json(Peticion);
-});
-
-router.get('reviews/:id', Authenticate, async (req, res) => {
-  console.log(`Request URL Param: ${req.params.id}`);
-  console.log(`Get Peticiones from an user`);
-
-  const Peticion = await usuarioService.getReviewByUserId(req.params.id);
-
-  return res.status(200).json(Peticion);
-});
+router.get('logIn', async (req, res) => {
+    console.log(`Log In`)
+    if(!req.body.email || !req.body.password){
+        return res.status(400).json("Error, llenar los datos por completo");
+    }else{
+        const response = await usuarioService.LogIn(req.body.email, req.body.password);
+        return res.status(200).json(response);
+    }
+})
 
 router.post('', Authenticate, async (req, res) => {
-  console.log(`This is a post operation`);
-  if(!req.body.email || !req.body.password || !req.body.nombre || !req.body.apellido || !req.body.ubicacion){
+  console.log(`Create Usuario`);
+  if(!req.body.email || !req.body.password || !req.body.tipo){
     return res.status(400).json("Llenar todos los datos");
   }
   else{
@@ -51,7 +43,7 @@ router.post('', Authenticate, async (req, res) => {
 
 router.put('/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
-  console.log(`This is a put operation`);
+  console.log(`Update Usuario`);
 
   const Usuario = await usuarioService.updateUsuarioById(req.params.id, req.body);
 
@@ -60,15 +52,11 @@ router.put('/:id', Authenticate, async (req, res) => {
 
 router.delete('/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
-  console.log(`This is a delete operation`);
+  console.log(`Delete Usuario`);
 
-  const Usuario = await usuarioService.deleteUsuarioById(req.params.id);
-
+  const Usuario = await UsuarioService.deleteUsuarioById(req.params.id);
   return res.status(200).json(Usuario);
 });
 
-router.get('/holamundo', async (req, res) => {
-    return res.status(200).json("Hola Mundo");
-});
-
 export default router;
+

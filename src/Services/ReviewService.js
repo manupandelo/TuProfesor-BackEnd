@@ -3,7 +3,7 @@ import ReviewHelper from '../Helpers/ReviewHelper.js'
 
 const ProfesorTabla = process.env.DB_TABLA_Profesor;
 const ReviewTabla = process.env.DB_TABLA_Review;
-const UsuarioTabla = process.env.DB_TABLA_Usuario;
+const AlumnoTabla = process.env.DB_TABLA_Alumno;
 export class ReviewService {
 
     getReviews = async () => {

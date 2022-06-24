@@ -33,6 +33,6 @@ export class TokenService {
             );
             return token;
         };
-        console.log(getSignedToken());
+        return getSignedToken();
     }   
 }

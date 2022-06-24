@@ -1,7 +1,7 @@
 import sql from 'mssql'
 import config from '../../../TuProfesor-Backend/db.js'
 
-const ProfesorHelper = async (params, query)=>{
+const ReviewHelper = async (params, query)=>{
     let response;
     const pool = await sql.connect(config);
     response = await pool.request()
@@ -12,4 +12,4 @@ const ProfesorHelper = async (params, query)=>{
     .input('Descripcion', sql.VarChar, params?.descripcion ?? '')
     .query(query);
 };
-export default ProfesorHelper
+export default ReviewHelper;

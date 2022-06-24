@@ -5,12 +5,10 @@ const UsuarioHelper = async (params, query)=>{
     let response;
     const pool = await sql.connect(config);
     response = await pool.request()
-    .input('Nombre',sql.VarChar, params?.nombre ?? '')
-    .input('Apellido',sql.VarChar, params?.apellido ?? '')
-    .input('Ubicacion',sql.VarChar, params?.ubicacion ?? '')
-    .input('Email',sql.VarChar, params?.email ?? '')
+    .input('Id',sql.Int, params?.id ?? 0)
     .input('Password',sql.VarChar, params?.password ?? '')
+    .input('Email',sql.VarChar, params?.email ?? '')
+    .input('Tipo',sql.Bit, params?.califacion ?? 1)
     .query(query);
-    return response;
 };
-export default UsuarioHelper
+export default UsuarioHelper;

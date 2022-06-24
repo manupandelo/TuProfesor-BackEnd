@@ -6,8 +6,8 @@ import 'dotenv/config'
 const ProfesorTabla = process.env.DB_TABLA_Profesor;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
 const ReviewTabla = process.env.DB_TABLA_Review;
-const IntermediaTabla= process.env.DB_TABLA_Intermedia
-const MateriaTabla= process.env.DB_TABLA_Materia
+const IntermediaTabla= process.env.DB_TABLA_Intermedia;
+const MateriaTabla= process.env.DB_TABLA_Materia;
 
 export class ProfesorService {
 
@@ -78,10 +78,9 @@ export class ProfesorService {
     createProfesor = async (Profesor) => {
         console.log('Create New Profesor in Profesor Service');
         let response;
-        let query=`INSERT INTO ${ProfesorTabla}(nombre, apellido, email, password, borndate, ubicacion, telefono, activo, disponibilidad, tipo) VALUES (@Nombre, @Apellido, @Email, @Password, @Nacimiento, @Ubicacion, @Telefono, @Activo, @Disponibilidad, @TipoClase)`;
+        let query=`INSERT INTO ${ProfesorTabla}(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, idUser) VALUES (@Nombre, @Apellido, @Nacimiento, @Ubicacion, @Telefono, @Activo, @Disponibilidad, @TipoClase, @IdUser)`;
         response=ProfesorHelper({Profesor}, query)
         console.log(response)
-
         return response.recordset;
     }
 
@@ -91,38 +90,22 @@ export class ProfesorService {
         let count=0;
         let comma=false
         let query=`UPDATE ${ProfesorTabla} SET`;
-        if(Profesor.email){
-            query+=` email=@Email`
+        if(Profesor.telefono){
+            query+=` telefono=@Telefono`
             comma=true;
-            count++;
-        }if(Profesor.password){
-            if(comma==true){
-                query+=`, password=@Password`
-            }else{
-                query=` password=@Password`
-                comma=true;
-            }
-            count++;
-        }if(Profesor.telefono){
-            if(comma==true){
-                query+=`, telefono=@Telefono`
-            }else{
-                query=` telefono=@Telefono`
-                comma=true;
-            }
             count++;
         }if(Profesor.ubicacion){
             if(comma==true){
                 query+=`, ubicacion=@Ubicacion`
             }else{
-                query=` ubicacion=@Ubicacion`
+                query+=` ubicacion=@Ubicacion`
                 comma=true;
             }
-        }if(Profesor.telefono){
+        }if(Profesor.activo){
             if(comma==true){
-                query+=`, telefono=@Telefono`
+                query+=`, activo=@Activo`
             }else{
-                query=` Telefono=@Telefono`
+                query+=` activo=@Activo`
                 comma=true;
             }
             count++;

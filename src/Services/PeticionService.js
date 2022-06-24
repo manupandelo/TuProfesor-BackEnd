@@ -2,7 +2,7 @@ import 'dotenv/config'
 import peticionHelper from '../Helpers/PeticionHelper.js'
 const ProfesorTabla = process.env.DB_TABLA_Profesor;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
-const UsuarioTabla = process.env.DB_TABLA_Usuario;
+const AlumnoTabla = process.env.DB_TABLA_Alumno;
 
 export class PeticionService {
 
