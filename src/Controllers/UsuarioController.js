@@ -20,14 +20,15 @@ router.get('/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Usuario);
 });
 
-router.get('logIn', async (req, res) => {
-    console.log(`Log In`)
-    if(!req.body.email || !req.body.password){
-        return res.status(400).json("Error, llenar los datos por completo");
-    }else{
-        const response = await usuarioService.LogIn(req.body.email, req.body.password);
-        return res.status(200).json(response);
-    }
+router.get('/log/in', async (req, res) => {
+  console.log(`Log In`)
+  if(!req.body.email || !req.body.password){
+      
+    return res.status(400).json("Error, llenar los datos por completo");
+  }else{
+      const response = await usuarioService.LogIn(req.body);
+      return res.status(200).json(response);
+  }
 })
 
 router.post('', Authenticate, async (req, res) => {

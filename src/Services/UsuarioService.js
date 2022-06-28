@@ -28,9 +28,11 @@ export class UsuarioService {
         return Usuario.recordset;
     }
 
-    LogIn = async (email, password)=> {
-        let query=`Select email, password from tabla where email=@Email and password=@Password`;
-        let response=await UsuarioHelper({email, password}, query);
+    LogIn = async (log)=> {
+        let response;
+        let query=`Select email, password from ${UsuarioTabla} where email=@Email and password=@Password`;
+        response=await UsuarioHelper({log}, query);
+        console.log(response);
         if(response.data){
             return tokenService.getToken();
         }else{

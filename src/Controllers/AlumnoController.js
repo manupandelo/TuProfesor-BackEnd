@@ -20,7 +20,7 @@ router.get('/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Alumno);
 });
 
-router.get('peticion/:id', Authenticate, async (req, res) => {
+router.get('/peticion/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`Get Peticiones from an user`);
 
@@ -29,7 +29,7 @@ router.get('peticion/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Peticion);
 });
 
-router.get('reviews/:id', Authenticate, async (req, res) => {
+router.get('/reviews/:id', Authenticate, async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`Get Peticiones from an user`);
 
@@ -65,10 +65,6 @@ router.delete('/:id', Authenticate, async (req, res) => {
   const Alumno = await alumnoService.deleteAlumnoById(req.params.id);
 
   return res.status(200).json(Alumno);
-});
-
-router.get('/test', async (req, res) => {
-  return res.status(200).json("Hola Mundo");
 });
 
 export default router;
