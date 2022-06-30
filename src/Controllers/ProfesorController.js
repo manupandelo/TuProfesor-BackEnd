@@ -7,7 +7,7 @@ const profesorService = new ProfesorService();
 
 router.get('', Authenticate, async (req, res) => {
   console.log(`This is a get operation`);
-  const Profesors = await profesorService.getProfesor(req.query.titulo, req.query.order);
+  const Profesors = await profesorService.getProfesor(req.query.ubicacion, req.query.materia, req.query.tipo, req.query.activo);
   return res.status(200).json(Profesors);
 });
 
@@ -31,7 +31,7 @@ router.get('/peticion/:id', Authenticate, async (req, res) => {
 
 router.post('', Authenticate, async (req, res) => {
   console.log(`This is a post operation`);
-  if(!req.body.nombre || req.body.apellido || !req.body.email || !req.body.password || !req.body.borndate || !req.body.ubicacion || !req.body.telefono || !req.body.activo || !req.body.disponibilidad || !req.body.tipo){
+  if(!req.body.nombre || req.body.apellido || !req.body.borndate || !req.body.ubicacion || !req.body.telefono || !req.body.activo || !req.body.disponibilidad || !req.body.tipo){
     return res.status(400).json("Llenar todos los datos");
   }
   else{
