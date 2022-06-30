@@ -11,7 +11,7 @@ const MateriaTabla= process.env.DB_TABLA_Materia;
 
 export class ProfesorService {
 
-    getProfesor = async (materia, ubicacion, tipo, activo) => {
+    getProfesor = async (ubicacion, materia, tipo, activo) => {
         console.log('Get all Profesores by user preferences in Profesor Service');
         let response;
         let query=`SELECT nombre, apellido, ubicacion, tipo from ${ProfesorTabla} inner join ${IntermediaTabla} on ${ProfesorTabla}.id = ${IntermediaTabla}.idProfesor inner join ${MateriaTabla} on ${IntermediaTabla}.idMateria=${MateriaTabla}.id  `; 
