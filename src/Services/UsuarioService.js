@@ -3,7 +3,7 @@ import peticionHelper from '../Helpers/PeticionHelper.js'
 import ReviewHelper from '../Helpers/ReviewHelper.js'
 import 'dotenv/config'
 import { TokenService } from './TokenService.js';
-
+import bcrypt from 'bcryptjs';
 const UsuarioTabla = process.env.DB_TABLA_Usuario;
 const TipoClaseTabla = process.env.DB_TABLA_Tipo_Clase;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
@@ -28,21 +28,24 @@ export class UsuarioService {
         return Usuario.recordset;
     }
 
-    LogIn = async (log)=> {
+    LogIn = async (email, password)=> {
         let response;
-        let query=`Select email, password from ${UsuarioTabla} where email=@Email and password=@Password`;
-        response=await UsuarioHelper({log}, query);
+        let query=`Select email, password, tipo from ${UsuarioTabla} where email=@Email`;
+        response=await UsuarioHelper({email}, query);
         console.log(response);
-        if(response.data){
-            return tokenService.getToken();
-        }else{
+        if(response.length== 0 || !(await bcrypt.compare(password, response[0].password))){
             return "Error, reintentar";
+        }else{
+            response.encontrado=true;
+            response.msj="hola"
+            return response.recordset;
         }
     }
 
     createUsuario = async (Usuario) => {
         console.log('Create New Usuario in Usuario Service');
         let response;
+        Usuario.password = await bcrypt.hash(Usuario.password, 10);
         let query=`INSERT INTO ${UsuarioTabla}(email, password, tipo) VALUES (@Email, @Password, @Tipo)`;
         response=UsuarioHelper({Usuario}, query)
         console.log(response)
