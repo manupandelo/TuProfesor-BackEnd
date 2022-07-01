@@ -12,7 +12,7 @@ const ProfesorHelper = async (params, query)=>{
     .input('Telefono',sql.Int, params?.telefono ?? '')
     .input('Activo',sql.Bit, params?.activo ?? 0)
     .input('Disponibilidad',sql.Date, params?.disponibilidad ?? '2000-01-01')
-    .input('TipoClase',sql.Bit, Profesor?.tipo ?? 0)
+    .input('TipoClase',sql.Bit, params?.tipo ?? 0)
     .input('IdUser',sql.Int, params?.iduser ?? 0)
     .query(query)
     return response;

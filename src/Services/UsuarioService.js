@@ -30,16 +30,14 @@ export class UsuarioService {
 
     LogIn = async (email, password)=> {
         let response;
-        let query=`Select email, password, tipo from ${UsuarioTabla} where email=@Email`;
-        response=await UsuarioHelper({email}, query);
+        let query=`Select email, password, tipo from ${UsuarioTabla} where email=@Email and password=@Password`;
+        response=await UsuarioHelper({email, password}, query);
         console.log(response);
-        if(response.length== 0 || !(await bcrypt.compare(password, response[0].password))){
+        /*if(response.recordset.password!=password/* !(await bcrypt.compare(password, response[0].password)))){
             return "Error, reintentar";
-        }else{
-            response.encontrado=true;
-            response.msj="hola"
+        }else{*/
             return response.recordset;
-        }
+        //}
     }
 
     createUsuario = async (Usuario) => {
@@ -47,7 +45,7 @@ export class UsuarioService {
         let response;
         Usuario.password = await bcrypt.hash(Usuario.password, 10);
         let query=`INSERT INTO ${UsuarioTabla}(email, password, tipo) VALUES (@Email, @Password, @Tipo)`;
-        response=UsuarioHelper({Usuario}, query)
+        response=await UsuarioHelper({Usuario}, query)
         console.log(response)
         return response.recordset;
     }

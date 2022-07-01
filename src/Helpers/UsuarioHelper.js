@@ -8,7 +8,8 @@ const UsuarioHelper = async (params, query)=>{
     .input('Id',sql.Int, params?.id ?? 0)
     .input('Password',sql.VarChar, params?.password ?? '')
     .input('Email',sql.VarChar, params?.email ?? '')
-    .input('Tipo',sql.Bit, params?.califacion ?? 1)
+    .input('Tipo',sql.Bit, params?.tipo ?? 1)
     .query(query);
+    return response;
 };
 export default UsuarioHelper;

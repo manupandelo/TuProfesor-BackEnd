@@ -5,7 +5,7 @@ import { ProfesorService } from '../Services/ProfesorService.js';
 const router = Router();
 const profesorService = new ProfesorService();
 
-router.get('', Authenticate, async (req, res) => {
+router.get('', async (req, res) => {
   console.log(`This is a get operation`);
   const Profesors = await profesorService.getProfesor(req.query.ubicacion, req.query.materia, req.query.tipo, req.query.activo);
   return res.status(200).json(Profesors);
