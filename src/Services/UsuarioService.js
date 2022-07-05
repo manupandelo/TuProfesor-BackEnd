@@ -4,6 +4,7 @@ import ReviewHelper from '../Helpers/ReviewHelper.js'
 import 'dotenv/config'
 import { TokenService } from './TokenService.js';
 import bcrypt from 'bcryptjs';
+
 const UsuarioTabla = process.env.DB_TABLA_Usuario;
 const TipoClaseTabla = process.env.DB_TABLA_Tipo_Clase;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
@@ -28,16 +29,19 @@ export class UsuarioService {
         return Usuario.recordset;
     }
 
-    LogIn = async (email, password)=> {
+    LogIn = async (Usuario)=> {
         let response;
-        let query=`Select email, password, tipo from ${UsuarioTabla} where email=@Email and password=@Password`;
-        response=await UsuarioHelper({email, password}, query);
+        let query=`Select email, password, tipo from ${UsuarioTabla} where email=@Email`;
+        response=await UsuarioHelper({Usuario}, query);
         console.log(response);
-        /*if(response.recordset.password!=password/* !(await bcrypt.compare(password, response[0].password)))){
+        if(!(await bcrypt.compare(Usuario.password, response[0].password))){
+            console.log("mal")
             return "Error, reintentar";
-        }else{*/
+
+        }else{
+            console.log("True")
             return response.recordset;
-        //}
+        }
     }
 
     createUsuario = async (Usuario) => {
@@ -55,12 +59,14 @@ export class UsuarioService {
         let response;
         let count=0;
         let comma=false
-        let query=`UPDATE ${UsuarioTabla} SET`;
+        let query=`UPDATE ${UsuarioTabla} SET `;
         if(Usuario.email){
             query+=` email=@Email`
             comma=true;
             count++;
         }if(Usuario.password){
+            Usuario.password=await bcrypt.hash(Usuario.password, 10);
+            count++;
             if(comma==true){
                 query+=`, password=@Password`
             }else{
@@ -78,8 +84,9 @@ export class UsuarioService {
         }
         if(count==0){return "Nada que cambiar"}
         else{
-        query+=`where id=@Id`;
+        query+=` where id=@Id`;
         response=await UsuarioHelper({id, Usuario}, query);
+        console.log(Usuario)
         console.log(response)
         }
         return response.recordset;

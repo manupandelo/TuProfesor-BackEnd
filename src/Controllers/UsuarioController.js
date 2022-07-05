@@ -22,11 +22,11 @@ router.get('/id/:id', Authenticate, async (req, res) => {
 
 router.get('/login', async (req, res) => {
   console.log(`Log In`)
-  if(!req.query.email || !req.query.password){
+  if(!req.body.email || !req.body.password){
     return res.status(400).json("Error, llenar los datos por completo");
   }else{
-      const response = await usuarioService.LogIn(req.query.email, req.query.password);
-      return res.status(200).json({response, "msj":"hola"});
+      const response = await usuarioService.LogIn(req.body);
+      return res.status(200).json({response});
   }
 })
 
