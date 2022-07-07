@@ -1,6 +1,7 @@
 import ProfesorHelper from '../Helpers/ProfesorHelper.js'
 import peticionHelper from '../Helpers/PeticionHelper.js'
 import ReviewHelper from '../Helpers/ReviewHelper.js'
+import UsuarioHelper from '../Helpers/UsuarioHelper.js'
 import 'dotenv/config'
 
 const ProfesorTabla = process.env.DB_TABLA_Profesor;
@@ -8,6 +9,7 @@ const PeticionTabla = process.env.DB_TABLA_Peticion;
 const ReviewTabla = process.env.DB_TABLA_Review;
 const IntermediaTabla= process.env.DB_TABLA_Intermedia;
 const MateriaTabla= process.env.DB_TABLA_Materia;
+const UsuarioTabla= process.env.DB_TABLA_Usuario;
 
 export class ProfesorService {
 
@@ -77,11 +79,19 @@ export class ProfesorService {
 
     createProfesor = async (Profesor) => {
         console.log('Create New Profesor in Profesor Service');
+        const id=Profesor.idUser
         let response;
+        let responsetype;
         let query=`INSERT INTO ${ProfesorTabla}(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, idUser) VALUES (@Nombre, @Apellido, @Nacimiento, @Ubicacion, @Telefono, @Activo, @Disponibilidad, @TipoClase, @IdUser)`;
-        response=ProfesorHelper({Profesor}, query)
-        console.log(response)
-        return response.recordset;
+        let query2=`select * from ${UsuarioTabla} where id=@Id`
+        responsetype=await UsuarioHelper({id},query2)
+        if(responsetype.recordset[0].tipo==1){
+            response=await ProfesorHelper({Profesor}, query)
+            console.log(response)
+            return response.recordset;
+        }else{
+            return "Fallo";
+        }
     }
 
     updateProfesorById = async (id, Profesor) => {

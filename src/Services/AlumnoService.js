@@ -2,14 +2,16 @@ import 'dotenv/config'
 import AlumnoHelper from '../Helpers/PeticionHelper.js'
 import peticionHelper from '../Helpers/PeticionHelper.js'
 import ReviewHelper from '../Helpers/ReviewHelper.js'
+import UsuarioHelper from '../Helpers/UsuarioHelper.js'
 
 const ReviewTabla = process.env.DB_TABLA_Review;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
 const AlumnoTabla = process.env.DB_TABLA_Alumno;
+const UsuarioTabla = process.env.DB_TABLA_Usuario;
 
 export class AlumnoService {
 
-    getAlumno = async (filtros) => {
+    getAlumno = async () => {
         console.log('Get All Alumnos in Alumno Service');
         let response;
         let query=`SELECT * from ${AlumnoTabla}`
@@ -47,12 +49,19 @@ export class AlumnoService {
 
     createAlumno = async (Alumno) => {
         console.log('Create New Alumno in Alumno Service');
-        //Ver bien como hacer que se inserten todas las variables y que no esten en null
+        let id=Alumno.idUser;
         let response;
+        let responsetype;
         let query=`INSERT INTO ${AlumnoTabla}(ubicacion, nombre, apellido, idUser) VALUES (@Ubicacion, @Nombre, @Apellido, @IdUser)`
-        response=AlumnoHelper({Alumno}, query);
-        console.log(response)
-        return response.recordset;
+        let query2=`select * from ${UsuarioTabla} where id=@Id`
+        responsetype= await UsuarioHelper({id},query2);
+        if(responsetype.recordset[0].tipo==0){
+            response= await AlumnoHelper({Alumno}, query);
+            console.log(response)
+            return response.recordset;
+        }else{
+            return "Fallo";
+        }
     }
     
     updateAlumnoById = async (id, Alumno) => {

@@ -2,7 +2,6 @@ import sql from 'mssql'
 import config from '../../../TuProfesor-Backend/db.js'
 
 const UsuarioHelper = async (params, query)=>{
-    console.log(params.Usuario.password)
     let response;
     const pool = await sql.connect(config);
     response = await pool.request()

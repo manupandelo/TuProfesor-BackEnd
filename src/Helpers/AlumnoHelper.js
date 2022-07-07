@@ -9,7 +9,7 @@ const AlumnoHelper = async (params, query)=>{
     .input('Nombre',sql.VarChar, params?.Alumno?.nombre ?? '')
     .input('Apellido',sql.VarChar, params?.Alumno?.apellido ?? '')
     .input('Ubicacion',sql.VarChar, params?.Alumno?.ubicacion ?? '')
-    .input('IdUser',sql.Int, params?.Alumno?.iduser ?? 0)
+    .input('IdUser',sql.Int, params?.Alumno?.idUser ?? 0)
     .query(query);
     return response;
 };

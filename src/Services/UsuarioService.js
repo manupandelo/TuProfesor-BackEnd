@@ -1,23 +1,19 @@
 import UsuarioHelper from '../Helpers/UsuarioHelper.js'
-import peticionHelper from '../Helpers/PeticionHelper.js'
-import ReviewHelper from '../Helpers/ReviewHelper.js'
 import 'dotenv/config'
 import { TokenService } from './TokenService.js';
 import bcrypt from 'bcryptjs';
 
 const UsuarioTabla = process.env.DB_TABLA_Usuario;
 const TipoClaseTabla = process.env.DB_TABLA_Tipo_Clase;
-const PeticionTabla = process.env.DB_TABLA_Peticion;
-const ReviewTabla = process.env.DB_TABLA_Review;
 const tokenService = new TokenService();
 
 export class UsuarioService {
 
-    getUsuario = async () => {
+    getUsuario = async (Usuario) => {
         console.log('Get all Usuarios by user preferences in Usuario Service');
         let response;
-        let query=`SELECT email, password, TipoClase.nombre, tipo from ${UsuarioTabla} inner join ${TipoClaseTabla} on ${UsuarioTabla}.tipo = ${TipoClaseTabla}.id`; 
-        response=await UsuarioHelper(undefined, query);
+        let query=`SELECT dsitinct email, password, TipoClase.nombre, tipo from ${UsuarioTabla} inner join ${TipoClaseTabla} on ${UsuarioTabla}.tipo = ${TipoClaseTabla}.id`; 
+        response=await UsuarioHelper({Usuario}, query);
         console.log(response)
         return response.recordset;
     }
@@ -31,27 +27,39 @@ export class UsuarioService {
 
     LogIn = async (Usuario)=> {
         let response;
-        let query=`Select email, password, tipo from ${UsuarioTabla} where email=@Email`;
+        let query=`Select * from ${UsuarioTabla} where email=@Email`;
         response=await UsuarioHelper({Usuario}, query);
         console.log(response);
-        if(!(await bcrypt.compare(Usuario.password, response[0].password))){
-            console.log("mal")
-            return "Error, reintentar";
+        if(response.recordset[0]==undefined){
+            return "Email incorrecto"
+        }
+        if(bcrypt.compareSync(Usuario.password, response.recordset[0].password)){
+            console.log("true")
+            return tokenService.getToken(response.recordset);
 
         }else{
-            console.log("True")
-            return response.recordset;
+            console.log("false")
+            return "Error, reintentar";
         }
     }
 
     createUsuario = async (Usuario) => {
         console.log('Create New Usuario in Usuario Service');
         let response;
-        Usuario.password = await bcrypt.hash(Usuario.password, 10);
-        let query=`INSERT INTO ${UsuarioTabla}(email, password, tipo) VALUES (@Email, @Password, @Tipo)`;
-        response=await UsuarioHelper({Usuario}, query)
-        console.log(response)
-        return response.recordset;
+        let exists;
+        let query2=`select * from ${UsuarioTabla} where email=@Email`
+        exists=await UsuarioHelper({Usuario}, query2);
+        if(exists.recordset[0]==undefined){
+            Usuario.password = await bcrypt.hash(Usuario.password, 10);
+            console.log(Usuario.password);
+            let query=`INSERT INTO ${UsuarioTabla}(email, password, tipo) VALUES (@Email, @Password, @Tipo)`;
+            response=await UsuarioHelper({Usuario}, query)
+            console.log(response)
+            return response.recordset;
+        }else{
+            return "Usuario ya existente"
+        }
+        
     }
 
     updateUsuarioById = async (id, Usuario) => {
