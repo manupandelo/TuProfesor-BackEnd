@@ -4,10 +4,10 @@ import "dotenv/config";
 export class TokenService {
     getToken = async (user) => {
         const userId = `${user.id}`;
-        const userMail = `${user.mail}`;
+        const userMail = `${user.email}`;
         const token = jwt.sign(
             {
-            payload: "custom payload",
+            payload: "login",
             userEmail: userMail,
             },
             process.env.AUTH_HS256_KEY,

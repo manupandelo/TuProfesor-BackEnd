@@ -31,7 +31,7 @@ router.get('/peticion/:id', Authenticate, async (req, res) => {
 
 router.post('', Authenticate, async (req, res) => {
   console.log(`This is a post operation`);
-  if(!req.body.nombre || req.body.apellido || !req.body.borndate || !req.body.ubicacion || !req.body.telefono || !req.body.activo || !req.body.disponibilidad || !req.body.tipo || !req.body.idUser){
+  if(!req.body.nombre || !req.body.apellido || !req.body.borndate || !req.body.ubicacion || !req.body.telefono || !req.body.activo || !req.body.disponibilidad || !req.body.tipo || !req.body.idUser){
     return res.status(400).json("Llenar todos los datos");
   }
   else{

@@ -47,8 +47,8 @@ export class ProfesorService {
             }
         }
         if(where){
-            query+="WHERE " + agregar + "order by (Select AVG())"
-        }
+            query+="WHERE " + agregar /*+ "order by (Select AVG())"*/
+        }//ARREGLAR PORFA
 
         response=await ProfesorHelper({materia, activo, ubicacion, tipo}, query);
         console.log(response)
@@ -85,7 +85,8 @@ export class ProfesorService {
         let query=`INSERT INTO ${ProfesorTabla}(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, idUser) VALUES (@Nombre, @Apellido, @Nacimiento, @Ubicacion, @Telefono, @Activo, @Disponibilidad, @TipoClase, @IdUser)`;
         let query2=`select * from ${UsuarioTabla} where id=@Id`
         responsetype=await UsuarioHelper({id},query2)
-        if(responsetype.recordset[0].tipo==1){
+        console.log(responsetype.recordset[0].tipo)
+        if(responsetype.recordset[0].tipo==true){
             response=await ProfesorHelper({Profesor}, query)
             console.log(response)
             return response.recordset;
@@ -111,6 +112,7 @@ export class ProfesorService {
                 query+=` ubicacion=@Ubicacion`
                 comma=true;
             }
+            count++
         }if(Profesor.activo){
             if(comma==true){
                 query+=`, activo=@Activo`
@@ -122,9 +124,9 @@ export class ProfesorService {
         }
         if(count==0){return "Nada que cambiar"}
         else{
-        query+=`where id=@Id`;
-        response=await ProfesorHelper({id, Profesor}, query);
-        console.log(response)
+            query+=`where id=@Id`;
+            response=await ProfesorHelper({id, Profesor}, query);
+            console.log(response)
         }
         return response.recordset;
     }

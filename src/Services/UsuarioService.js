@@ -49,7 +49,7 @@ export class UsuarioService {
         let exists;
         let query2=`select * from ${UsuarioTabla} where email=@Email`
         exists=await UsuarioHelper({Usuario}, query2);
-        if(exists.recordset[0]==undefined){
+        if(exists.recordset[0]==(undefined||null||NaN)){
             Usuario.password = await bcrypt.hash(Usuario.password, 10);
             console.log(Usuario.password);
             let query=`INSERT INTO ${UsuarioTabla}(email, password, tipo) VALUES (@Email, @Password, @Tipo)`;

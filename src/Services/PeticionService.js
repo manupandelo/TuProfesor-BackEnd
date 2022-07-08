@@ -19,7 +19,7 @@ export class PeticionService {
     getPeticionById = async (id) => {
         console.log('Get Peticion by its ID');
         let response;
-        let query=`SELECT * from ${PeticionTabla} where idPeticion = @id`;
+        let query=`SELECT Profesor.nombre, Profesor.apellido, Peticion.horario, Alumno.nombre from ${PeticionTabla} inner join ${AlumnoTabla} on ${PeticionTabla}.idAlumno=${AlumnoTabla}.id inner join ${ProfesorTabla} on ${PeticionTabla}.idProfesor=${ProfesorTabla}.id where idPeticion = @id`;
         response=await peticionHelper({id}, query)
         console.log(response)
 
@@ -30,7 +30,7 @@ export class PeticionService {
         console.log('create Peticion in Peticion Service');
         let response;
         let query=`INSERT INTO ${PeticionTabla}(idAlumno, idProfesor, detalles, horario) VALUES (@IdAlumno, @IdProfesor, @Detalles, @Horario)`
-        response=peticionHelper({Peticion},query);
+        response=await peticionHelper({Peticion},query);
         console.log(response)
         return response.recordset;
     }

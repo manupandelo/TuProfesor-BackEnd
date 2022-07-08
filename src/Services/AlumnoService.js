@@ -15,7 +15,7 @@ export class AlumnoService {
         console.log('Get All Alumnos in Alumno Service');
         let response;
         let query=`SELECT * from ${AlumnoTabla}`
-        response=AlumnoHelper(undefined,query);
+        response= await AlumnoHelper(undefined,query);
         console.log(response)
         return response.recordset;
     }
@@ -24,7 +24,7 @@ export class AlumnoService {
         console.log('Get Alumno By Id in Alumno Service');
         let response;
         let query=`SELECT * from ${AlumnoTabla} where id = @id`
-        response=AlumnoHelper({id},query);
+        response= await AlumnoHelper({id},query);
         console.log(response)
         return response.recordset;
     }
@@ -33,7 +33,7 @@ export class AlumnoService {
         console.log('Get Peticion by the User Id');
         let response;
         let query=`SELECT * from ${PeticionTabla} where idAlumno = @id`
-        response=peticionHelper({id}, query);
+        response= await peticionHelper({id}, query);
         console.log(response)
         return response.recordset;
     }
@@ -55,7 +55,8 @@ export class AlumnoService {
         let query=`INSERT INTO ${AlumnoTabla}(ubicacion, nombre, apellido, idUser) VALUES (@Ubicacion, @Nombre, @Apellido, @IdUser)`
         let query2=`select * from ${UsuarioTabla} where id=@Id`
         responsetype= await UsuarioHelper({id},query2);
-        if(responsetype.recordset[0].tipo==0){
+        console.log(responsetype.recordset[0].tipo)
+        if(responsetype.recordset[0].tipo==true){
             response= await AlumnoHelper({Alumno}, query);
             console.log(response)
             return response.recordset;
@@ -65,7 +66,6 @@ export class AlumnoService {
     }
     
     updateAlumnoById = async (id, Alumno) => {
-        //ver encriptacion para claves y/o emails
         console.log('Update Alumno by Id in Alumno Service');
         console.log(id, Alumno)
         let response;
@@ -79,7 +79,8 @@ export class AlumnoService {
         }// dejo por el dia en el que haya que meter mas datos
         if(count==0){return "Nada que cambiar"}
         else{
-            response=AlumnoHelper({id, Alumno}, query);
+            query+=` WHERE id=@Id`
+            response=await AlumnoHelper({id, Alumno}, query);
             console.log(response)
             return response.recordset;
         }
@@ -89,7 +90,7 @@ export class AlumnoService {
         console.log('Delete Alumno by Id in Alumno Service');
         let response;
         let query=`DELETE FROM ${AlumnoTabla} WHERE id = @id`;
-        response=AlumnoHelper(undefined, query);
+        response=await AlumnoHelper(undefined, query);
         console.log(response)
         return response.recordset;
     }

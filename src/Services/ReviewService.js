@@ -10,7 +10,7 @@ export class ReviewService {
         console.log('Get All Reviews');
         let response;
         let query=`SELECT * from ${ReviewTabla}`
-        response=ReviewHelper(undefined, query)
+        response=await ReviewHelper(undefined, query)
         console.log(response)
         return response.recordset;
     }
@@ -19,8 +19,7 @@ export class ReviewService {
         console.log('Get Review by its ID');
         let response;
         let query=`SELECT * from ${ReviewTabla} where idReview = @Id`;
-        const pool = await sql.connect(config);
-        response=ReviewHelper({id}, query)
+        response=await ReviewHelper({id}, query)
         console.log(response)
         return response.recordset;
     }
@@ -29,7 +28,7 @@ export class ReviewService {
         console.log('create Review in Review Service');
         let response;
         let query=`INSERT INTO ${ReviewTabla}(idAlumno, idProfesor, calificacion, nombre, descripcion) VALUES (@IdAlumno, @IdProfesor, @Calificacion, @Nombre, @Descripcion)`
-        response=ReviewHelper({Review}, query)
+        response=await ReviewHelper({Review}, query)
         console.log(response)
         return response.recordset;
     }
@@ -54,7 +53,7 @@ export class ReviewService {
                 query=`update ${ReviewTabla} SET descripcion=@Descripcion, calificacion=@Calificacion where idReview=@Id`
             }
         }
-        response=ReviewHelper({id, Review}, query)
+        response=await ReviewHelper({id, Review}, query)
         console.log(response)
         return response.recordset;
     }
@@ -63,7 +62,7 @@ export class ReviewService {
         console.log('Delete Review by id in Review service');
         let response;
         let query=`DELETE FROM ${ReviewTabla} WHERE idReview = @id`;
-        response=ReviewHelper(undefined, query)
+        response=await ReviewHelper(undefined, query)
         console.log(response)
 
         return response.recordset;
