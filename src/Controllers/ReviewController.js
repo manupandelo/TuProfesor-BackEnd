@@ -22,7 +22,7 @@ router.get('/:id', Authenticate, async (req, res) => {
 
 router.post('', Authenticate, async (req, res) => {
   console.log(`Create Review`);
-  if(!req.body.idProfesor || !req.body.idAlumno || !req.body.nombre || !req.body.calificacion || req.body.califacion>5 || req.body.califacion<=0){
+  if(!req.body.idProfesor || !req.body.idAlumno || !req.body.nombre || !req.body.calificacion || req.body.califacion>5 || req.body.califacion<=0 || req.body.califacion==NaN){
     return res.status(400).json("Llenar todos los datos");
   }
   else{  

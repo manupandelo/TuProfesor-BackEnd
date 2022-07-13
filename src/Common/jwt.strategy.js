@@ -22,7 +22,6 @@ export default jwtStrategy;
 
 export const Authenticate = (req, res, next) => {
   let token = req.headers['authorization']
-  console.log(user);
   token = token.replace("Bearer ", "")
   // console.log(token);
 
@@ -30,6 +29,5 @@ export const Authenticate = (req, res, next) => {
   if(isValid){
     return next()
   }
-
   return res.status(401).send({ message: 'Unauthorized' });
 };

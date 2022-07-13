@@ -12,7 +12,7 @@ export class UsuarioService {
     getUsuario = async (Usuario) => {
         console.log('Get all Usuarios by user preferences in Usuario Service');
         let response;
-        let query=`SELECT dsitinct email, password, TipoClase.nombre, tipo from ${UsuarioTabla} inner join ${TipoClaseTabla} on ${UsuarioTabla}.tipo = ${TipoClaseTabla}.id`; 
+        let query=`SELECT distinct email, password, tipo from ${UsuarioTabla}`; 
         response=await UsuarioHelper({Usuario}, query);
         console.log(response)
         return response.recordset;
@@ -35,8 +35,7 @@ export class UsuarioService {
         }
         if(bcrypt.compareSync(Usuario.password, response.recordset[0].password)){
             console.log("true")
-            return tokenService.getToken(response.recordset);
-
+            return tokenService.getToken(response.recordset[0]);
         }else{
             console.log("false")
             return "Error, reintentar";
