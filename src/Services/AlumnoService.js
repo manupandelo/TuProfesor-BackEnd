@@ -1,20 +1,15 @@
 import 'dotenv/config'
-import AlumnoHelper from '../Helpers/PeticionHelper.js'
-import peticionHelper from '../Helpers/PeticionHelper.js'
-import ReviewHelper from '../Helpers/ReviewHelper.js'
-import UsuarioHelper from '../Helpers/UsuarioHelper.js'
+import mysql from 'mysql'
+import config from '../../db.js'
 
-const ReviewTabla = process.env.DB_TABLA_Review;
-const PeticionTabla = process.env.DB_TABLA_Peticion;
-const AlumnoTabla = process.env.DB_TABLA_Alumno;
-const UsuarioTabla = process.env.DB_TABLA_Usuario;
+var connection = mysql.createConnection(config);
 
 export class AlumnoService {
 
     getAlumno = async () => {
         console.log('Get All Alumnos in Alumno Service');
         let response;
-        let query=`SELECT * from ${AlumnoTabla}`
+        let query=`SELECT * from Alumno`
         response= await AlumnoHelper(undefined,query);
         console.log(response)
         return response.recordset;
@@ -23,7 +18,7 @@ export class AlumnoService {
     getAlumnoById = async (id) => {
         console.log('Get Alumno By Id in Alumno Service');
         let response;
-        let query=`SELECT * from ${AlumnoTabla} where id = @id`
+        let query=`SELECT * from Alumno where id = @id`
         response= await AlumnoHelper({id},query);
         console.log(response)
         return response.recordset;
@@ -32,7 +27,7 @@ export class AlumnoService {
     getPeticionByUserId = async (id) => {
         console.log('Get Peticion by the User Id');
         let response;
-        let query=`SELECT * from ${PeticionTabla} where idAlumno = @id`
+        let query=`SELECT * from Peticion where idAlumno = @id`
         response= await peticionHelper({id}, query);
         console.log(response)
         return response.recordset;
@@ -41,7 +36,7 @@ export class AlumnoService {
     getReviewByUserId = async (id) => {
         console.log('Get Peticion by the User Id');
         let response;
-        let query=`SELECT * from ${ReviewTabla} where idAlumno = @id`
+        let query=`SELECT * from Review where idAlumno = @id`
         response=ReviewHelper({id}, query);
         console.log(response)
         return response.recordset;
@@ -52,8 +47,8 @@ export class AlumnoService {
         let id=Alumno.idUser;
         let response;
         let responsetype;
-        let query=`INSERT INTO ${AlumnoTabla}(ubicacion, nombre, apellido, idUser) VALUES (@Ubicacion, @Nombre, @Apellido, @IdUser)`
-        let query2=`select * from ${UsuarioTabla} where id=@Id`
+        let query=`INSERT INTO Alumno(ubicacion, nombre, apellido, idUser) VALUES (@Ubicacion, @Nombre, @Apellido, @IdUser)`
+        let query2=`select * from Usuario where id=@Id`
         responsetype= await UsuarioHelper({id},query2);
         console.log(responsetype.recordset[0].tipo)
         if(responsetype.recordset[0].tipo==true){
@@ -71,7 +66,7 @@ export class AlumnoService {
         let response;
         let count=0;
         let comma=false
-        let query=`UPDATE ${AlumnoTabla} SET`;
+        let query=`UPDATE Alumno SET`;
         if(Alumno.ubicacion){            
             query+=` ubicacion=@Ubicacion`
             comma=true;
@@ -89,7 +84,7 @@ export class AlumnoService {
     deleteAlumnoById = async (id) => {
         console.log('Delete Alumno by Id in Alumno Service');
         let response;
-        let query=`DELETE FROM ${AlumnoTabla} WHERE id = @id`;
+        let query=`DELETE FROM Alumno WHERE id = @id`;
         response=await AlumnoHelper(undefined, query);
         console.log(response)
         return response.recordset;

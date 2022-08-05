@@ -1,15 +1,19 @@
 import 'dotenv/config'
 import ReviewHelper from '../Helpers/ReviewHelper.js'
+import mysql from 'mysql'
+import config from '../../db.js'
 
-const ProfesorTabla = process.env.DB_TABLA_Profesor;
+const Profesor = process.env.DB_TABLA_Profesor;
 const ReviewTabla = process.env.DB_TABLA_Review;
 const AlumnoTabla = process.env.DB_TABLA_Alumno;
+var connection = mysql.createConnection(config);
+
 export class ReviewService {
 
     getReviews = async () => {
         console.log('Get All Reviews');
         let response;
-        let query=`SELECT * from ${ReviewTabla}`
+        let query=`SELECT * from Review`
         response=await ReviewHelper(undefined, query)
         console.log(response)
         return response.recordset;
@@ -18,7 +22,7 @@ export class ReviewService {
     getReviewById = async (id) => {
         console.log('Get Review by its ID');
         let response;
-        let query=`SELECT * from ${ReviewTabla} where idReview = @Id`;
+        let query=`SELECT * from Review where idReview = @Id`;
         response=await ReviewHelper({id}, query)
         console.log(response)
         return response.recordset;
@@ -27,7 +31,7 @@ export class ReviewService {
     createReview = async (Review) => {
         console.log('create Review in Review Service');
         let response;
-        let query=`INSERT INTO ${ReviewTabla}(idAlumno, idProfesor, calificacion, nombre, descripcion) VALUES (@IdAlumno, @IdProfesor, @Calificacion, @Nombre, @Descripcion)`
+        let query=`INSERT INTO Review(idAlumno, idProfesor, calificacion, nombre, descripcion) VALUES (@IdAlumno, @IdProfesor, @Calificacion, @Nombre, @Descripcion)`
         response=await ReviewHelper({Review}, query)
         console.log(response)
         return response.recordset;
@@ -42,15 +46,15 @@ export class ReviewService {
             if(!Review.califacion || Review.califacion>5 || Review.califacion<=0){
                return "Nada que cambiar";
             }else{
-                query=`update ${ReviewTabla} SET calificacion=@Calificacion where idReview=@Id`
+                query=`update Review SET calificacion=@Calificacion where idReview=@Id`
             }
         }
         else{
             if(!Review.califacion || Review.califacion>5 || Review.califacion<=0){
-                query=`update ${ReviewTabla} SET descripcion=@Descripcion where idReview=@Id`
+                query=`update Review SET descripcion=@Descripcion where idReview=@Id`
             }
             else{
-                query=`update ${ReviewTabla} SET descripcion=@Descripcion, calificacion=@Calificacion where idReview=@Id`
+                query=`update Review SET descripcion=@Descripcion, calificacion=@Calificacion where idReview=@Id`
             }
         }
         response=await ReviewHelper({id, Review}, query)
@@ -61,7 +65,7 @@ export class ReviewService {
     deleteReviewById = async (id) => {
         console.log('Delete Review by id in Review service');
         let response;
-        let query=`DELETE FROM ${ReviewTabla} WHERE idReview = @id`;
+        let query=`DELETE FROM Review WHERE idReview = @id`;
         response=await ReviewHelper(undefined, query)
         console.log(response)
 

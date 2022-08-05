@@ -1,10 +1,9 @@
-import ProfesorHelper from '../Helpers/ProfesorHelper.js'
-import peticionHelper from '../Helpers/PeticionHelper.js'
-import ReviewHelper from '../Helpers/ReviewHelper.js'
-import UsuarioHelper from '../Helpers/UsuarioHelper.js'
 import 'dotenv/config'
+import mysql from 'mysql'
+import config from '../../db.js'
 
-const ProfesorTabla = process.env.DB_TABLA_Profesor;
+var connection = mysql.createConnection(config);
+const Profesor = process.env.DB_TABLA_Profesor;
 const PeticionTabla = process.env.DB_TABLA_Peticion;
 const ReviewTabla = process.env.DB_TABLA_Review;
 const IntermediaTabla= process.env.DB_TABLA_Intermedia;
@@ -16,7 +15,7 @@ export class ProfesorService {
     getProfesor = async (ubicacion, materia, tipo, activo) => {
         console.log('Get all Profesores by user preferences in Profesor Service');
         let response;
-        let query=`SELECT nombre, apellido, ubicacion, tipo from ${ProfesorTabla} inner join ${IntermediaTabla} on ${ProfesorTabla}.id = ${IntermediaTabla}.idProfesor inner join ${MateriaTabla} on ${IntermediaTabla}.idMateria=${MateriaTabla}.id  `; 
+        let query=`SELECT nombre, apellido, ubicacion, tipo from Profesor inner join ${IntermediaTabla} on Profesor.id = ${IntermediaTabla}.idProfesor inner join ${MateriaTabla} on ${IntermediaTabla}.idMateria=${MateriaTabla}.id  `; 
         let where=false
         let agregar=''
 
@@ -57,8 +56,8 @@ export class ProfesorService {
 
     getProfesorById = async (id) => {
         console.log('Get Profesor by its ID in Profesor Service');
-        let query1=`SELECT nombre, apellido, disponibilidad, ubicacion, tipo from ${ProfesorTabla} where id = @id`
-        let query2=`SELECT * from ${ReviewTabla} where idProfesor = @id`
+        let query1=`SELECT nombre, apellido, disponibilidad, ubicacion, tipo from Profesor where id = @id`
+        let query2=`SELECT * from Review where idProfesor = @id`
         let Profesor = ProfesorHelper({id}, query1);
         let Reviews =await ReviewHelper({id}, query2);
         console.log(Reviews)
@@ -70,7 +69,7 @@ export class ProfesorService {
     getPeticionByTeacherId = async (id) => {
         console.log('Get Peticion by the Teacher ID');
         let response;
-        let query=`SELECT * from ${PeticionTabla} where idProfesor = @Id`;
+        let query=`SELECT * from Peticion where idProfesor = @Id`;
         response=await peticionHelper({id}, query);
         console.log(response)
 
@@ -82,8 +81,8 @@ export class ProfesorService {
         const id=Profesor.idUser
         let response;
         let responsetype;
-        let query=`INSERT INTO ${ProfesorTabla}(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, idUser) VALUES (@Nombre, @Apellido, @Nacimiento, @Ubicacion, @Telefono, @Activo, @Disponibilidad, @TipoClase, @IdUser)`;
-        let query2=`select * from ${UsuarioTabla} where id=@Id`
+        let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, idUser) VALUES (@Nombre, @Apellido, @Nacimiento, @Ubicacion, @Telefono, @Activo, @Disponibilidad, @TipoClase, @IdUser)`;
+        let query2=`select * from Usuario where id=@Id`
         responsetype=await UsuarioHelper({id},query2)
         console.log(responsetype.recordset[0].tipo)
         if(responsetype.recordset[0].tipo==true){
@@ -100,7 +99,7 @@ export class ProfesorService {
         let response;
         let count=0;
         let comma=false
-        let query=`UPDATE ${ProfesorTabla} SET`;
+        let query=`UPDATE Profesor SET`;
         if(Profesor.telefono){
             query+=` telefono=@Telefono`
             comma=true;
@@ -134,7 +133,7 @@ export class ProfesorService {
     deleteProfesorById = async (id) => {
         console.log('Delete Profesor by ID in Profesor Service');
         let response;
-        let query=`DELETE FROM ${ProfesorTabla} WHERE id = @Id`;
+        let query=`DELETE FROM Profesor WHERE id = @Id`;
         response = await ProfesorHelper(undefined, query);
         console.log(response)
 

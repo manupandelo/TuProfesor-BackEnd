@@ -2,17 +2,20 @@ import UsuarioHelper from '../Helpers/UsuarioHelper.js'
 import 'dotenv/config'
 import { TokenService } from './TokenService.js';
 import bcrypt from 'bcryptjs';
+import mysql from 'mysql'
+import config from '../../db.js'
 
 const UsuarioTabla = process.env.DB_TABLA_Usuario;
 const TipoClaseTabla = process.env.DB_TABLA_Tipo_Clase;
 const tokenService = new TokenService();
+var connection = mysql.createConnection(config);
 
 export class UsuarioService {
-
+    
     getUsuario = async (Usuario) => {
         console.log('Get all Usuarios by user preferences in Usuario Service');
         let response;
-        let query=`SELECT distinct email, password, tipo from ${UsuarioTabla}`; 
+        let query=`SELECT distinct email, password, tipo from Usuario`; 
         response=await UsuarioHelper({Usuario}, query);
         console.log(response)
         return response.recordset;
@@ -20,14 +23,14 @@ export class UsuarioService {
 
     getUsuarioById = async (id) => {
         console.log('Get Usuario by its ID in Usuario Service');
-        let query1=`SELECT email, password, TipoClase.nombre, tipo from ${UsuarioTabla} inner join ${TipoClaseTabla} on ${UsuarioTabla}.tipo = ${TipoClaseTabla}.id where id = @id`
+        let query1=`SELECT email, password, TipoClase.nombre, tipo from Usuario inner join ${TipoClaseTabla} on Usuario.tipo = ${TipoClaseTabla}.id where id = @id`
         let Usuario =await UsuarioHelper({id}, query1);
         return Usuario.recordset;
     }
 
     LogIn = async (Usuario)=> {
         let response;
-        let query=`Select * from ${UsuarioTabla} where email=@Email`;
+        let query=`Select * from Usuario where email=@Email`;
         response=await UsuarioHelper({Usuario}, query);
         console.log(response);
         if(response.recordset[0]==undefined){
@@ -35,7 +38,8 @@ export class UsuarioService {
         }
         if(bcrypt.compareSync(Usuario.password, response.recordset[0].password)){
             console.log("true")
-            return tokenService.getToken(response.recordset[0]);
+            response.recordset[0].token=tokenService.getToken(response.recordset[0]);
+            return response.recordset;
         }else{
             console.log("false")
             return "Error, reintentar";
@@ -46,12 +50,12 @@ export class UsuarioService {
         console.log('Create New Usuario in Usuario Service');
         let response;
         let exists;
-        let query2=`select * from ${UsuarioTabla} where email=@Email`
+        let query2=`select * from Usuario where email=@Email`
         exists=await UsuarioHelper({Usuario}, query2);
         if(exists.recordset[0]==(undefined||null||NaN)){
             Usuario.password = await bcrypt.hash(Usuario.password, 10);
             console.log(Usuario.password);
-            let query=`INSERT INTO ${UsuarioTabla}(email, password, tipo) VALUES (@Email, @Password, @Tipo)`;
+            let query=`INSERT INTO Usuario(email, password, tipo) VALUES (@Email, @Password, @Tipo)`;
             response=await UsuarioHelper({Usuario}, query)
             console.log(response)
             return response.recordset;
@@ -66,7 +70,7 @@ export class UsuarioService {
         let response;
         let count=0;
         let comma=false
-        let query=`UPDATE ${UsuarioTabla} SET `;
+        let query=`UPDATE Usuario SET `;
         if(Usuario.email){
             query+=` email=@Email`
             comma=true;
@@ -102,7 +106,7 @@ export class UsuarioService {
     deleteUsuarioById = async (id) => {
         console.log('Delete Usuario by ID in Usuario Service');
         let response;
-        let query=`DELETE FROM ${UsuarioTabla} WHERE id = @Id`;
+        let query=`DELETE FROM Usuario WHERE id = @Id`;
         response = await UsuarioHelper(undefined, query);
         console.log(response)
 
