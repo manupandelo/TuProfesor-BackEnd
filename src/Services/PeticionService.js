@@ -1,11 +1,5 @@
 import 'dotenv/config'
-import mysql from 'mysql'
-import config from '../../db.js'
-
-const Profesor = process.env.DB_TABLA_Profesor;
-const PeticionTabla = process.env.DB_TABLA_Peticion;
-const AlumnoTabla = process.env.DB_TABLA_Alumno;
-var connection = mysql.createConnection(config);
+import connection from '../../db.js'
 
 export class PeticionService {
 

@@ -1,12 +1,5 @@
 import 'dotenv/config'
-import ReviewHelper from '../Helpers/ReviewHelper.js'
-import mysql from 'mysql'
-import config from '../../db.js'
-
-const Profesor = process.env.DB_TABLA_Profesor;
-const ReviewTabla = process.env.DB_TABLA_Review;
-const AlumnoTabla = process.env.DB_TABLA_Alumno;
-var connection = mysql.createConnection(config);
+import connection from '../../db.js'
 
 export class ReviewService {
 

@@ -1,21 +1,12 @@
 import 'dotenv/config'
-import mysql from 'mysql'
 import config from '../../db.js'
-
-var connection = mysql.createConnection(config);
-const Profesor = process.env.DB_TABLA_Profesor;
-const PeticionTabla = process.env.DB_TABLA_Peticion;
-const ReviewTabla = process.env.DB_TABLA_Review;
-const IntermediaTabla= process.env.DB_TABLA_Intermedia;
-const MateriaTabla= process.env.DB_TABLA_Materia;
-const UsuarioTabla= process.env.DB_TABLA_Usuario;
 
 export class ProfesorService {
 
     getProfesor = async (ubicacion, materia, tipo, activo) => {
         console.log('Get all Profesores by user preferences in Profesor Service');
         let response;
-        let query=`SELECT nombre, apellido, ubicacion, tipo from Profesor inner join ${IntermediaTabla} on Profesor.id = ${IntermediaTabla}.idProfesor inner join ${MateriaTabla} on ${IntermediaTabla}.idMateria=${MateriaTabla}.id  `; 
+        let query=`SELECT nombre, apellido, ubicacion, tipo from Profesor inner join MateriaXProfesor on Profesor.id = MateriaXProfesor.idProfesor inner join Materia on MateriaXProfesor.idMateria=Materia.id  `; 
         let where=false
         let agregar=''
 

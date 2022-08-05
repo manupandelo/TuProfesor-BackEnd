@@ -2,13 +2,9 @@ import UsuarioHelper from '../Helpers/UsuarioHelper.js'
 import 'dotenv/config'
 import { TokenService } from './TokenService.js';
 import bcrypt from 'bcryptjs';
-import mysql from 'mysql'
-import config from '../../db.js'
+import connection from '../../db.js'
 
-const UsuarioTabla = process.env.DB_TABLA_Usuario;
-const TipoClaseTabla = process.env.DB_TABLA_Tipo_Clase;
 const tokenService = new TokenService();
-var connection = mysql.createConnection(config);
 
 export class UsuarioService {
     
@@ -23,7 +19,7 @@ export class UsuarioService {
 
     getUsuarioById = async (id) => {
         console.log('Get Usuario by its ID in Usuario Service');
-        let query1=`SELECT email, password, TipoClase.nombre, tipo from Usuario inner join ${TipoClaseTabla} on Usuario.tipo = ${TipoClaseTabla}.id where id = @id`
+        let query1=`SELECT email, password, TipoClase.nombre, tipo from Usuario inner join TipoClase on Usuario.tipo = TipoClase.id where id = @id`
         let Usuario =await UsuarioHelper({id}, query1);
         return Usuario.recordset;
     }

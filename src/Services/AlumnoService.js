@@ -1,8 +1,5 @@
 import 'dotenv/config'
-import mysql from 'mysql'
-import config from '../../db.js'
-
-var connection = mysql.createConnection(config);
+import connection from '../../db.js'
 
 export class AlumnoService {
 
