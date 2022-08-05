@@ -5,7 +5,7 @@ import { UsuarioService } from '../Services/UsuarioService.js';
 const router = Router();
 const usuarioService = new UsuarioService();
 
-router.get('', Authenticate, async (req, res) => {
+router.get('',/*Authenticate,*/ async (req, res) => {
   console.log(`This is a get operation`);
   const Usuarios = await usuarioService.getUsuario();
   return res.status(200).json(Usuarios);

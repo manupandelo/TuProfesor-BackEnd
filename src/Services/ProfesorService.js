@@ -40,7 +40,7 @@ export class ProfesorService {
             query+="WHERE " + agregar /*+ "order by (Select AVG())"*/
         }//ARREGLAR PORFA
 
-        response=await ProfesorHelper({materia, activo, ubicacion, tipo}, query);
+        //response=await ProfesorHelper({materia, activo, ubicacion, tipo}, query);
         console.log(response)
         return response.recordset;
     }
@@ -49,22 +49,36 @@ export class ProfesorService {
         console.log('Get Profesor by its ID in Profesor Service');
         let query1=`SELECT nombre, apellido, disponibilidad, ubicacion, tipo from Profesor where id = @id`
         let query2=`SELECT * from Review where idProfesor = @id`
-        let Profesor = ProfesorHelper({id}, query1);
-        let Reviews =await ReviewHelper({id}, query2);
-        console.log(Reviews)
-
-        Profesor.recordset[0].Reviews=Reviews.recordset;
-        return Profesor.recordset;
+        connection.connect(function(err) {
+            if (err) throw err;
+            connection.query(query,[id], function (err, result, fields) {
+              if (err) throw err;
+              console.log(result);
+              response=result;
+            });
+        });
+        connection.end();
+        console.log(response)
+        //fijarse para agregar reviews
+        return response;
     }
 
     getPeticionByTeacherId = async (id) => {
         console.log('Get Peticion by the Teacher ID');
         let response;
         let query=`SELECT * from Peticion where idProfesor = @Id`;
-        response=await peticionHelper({id}, query);
+        connection.connect(function(err) {
+            if (err) throw err;
+            connection.query(query,[id], function (err, result, fields) {
+              if (err) throw err;
+              console.log(result);
+              response=result;
+            });
+        });
+        connection.end();
         console.log(response)
 
-        return response.recordset;
+        return response;
     }
 
     createProfesor = async (Profesor) => {
@@ -72,12 +86,32 @@ export class ProfesorService {
         const id=Profesor.idUser
         let response;
         let responsetype;
-        let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, idUser) VALUES (@Nombre, @Apellido, @Nacimiento, @Ubicacion, @Telefono, @Activo, @Disponibilidad, @TipoClase, @IdUser)`;
+        let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, idUser) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         let query2=`select * from Usuario where id=@Id`
-        responsetype=await UsuarioHelper({id},query2)
-        console.log(responsetype.recordset[0].tipo)
-        if(responsetype.recordset[0].tipo==true){
-            response=await ProfesorHelper({Profesor}, query)
+        connection.connect(function(err) {
+            if (err) throw err;
+            connection.query(query,[id], function (err, result, fields) {
+              if (err) throw err;
+              console.log(result);
+              responsetype=result;
+            });
+        });
+        connection.end();
+        console.log(responsetype)//responsetype=await UsuarioHelper({id},query2)
+        console.log(responsetype[0].tipo)
+        if(responsetype[0].tipo==true){
+            connection.connect(function(err) {
+                if (err) throw err;
+                connection.query(query,[Profesor.nombre, Profesor.apellido, Profesor.borndate, Profesor.ubicacion, Profesor.telefono, Profesor.activo, Profesor.disponibilidad, Profesor.tipo, Profesor.idUser], function (err, result, fields) {
+                  if (err) throw err;
+                  console.log(result);
+                  response=result;
+                });
+            });
+            connection.end();
+            console.log(response)
+    
+            return response;//response=await ProfesorHelper({Profesor}, query)
             console.log(response)
             return response.recordset;
         }else{
@@ -115,7 +149,8 @@ export class ProfesorService {
         if(count==0){return "Nada que cambiar"}
         else{
             query+=`where id=@Id`;
-            response=await ProfesorHelper({id, Profesor}, query);
+            console.log(query)
+            //response=await ProfesorHelper({id, Profesor}, query);
             console.log(response)
         }
         return response.recordset;
@@ -125,9 +160,17 @@ export class ProfesorService {
         console.log('Delete Profesor by ID in Profesor Service');
         let response;
         let query=`DELETE FROM Profesor WHERE id = @Id`;
-        response = await ProfesorHelper(undefined, query);
+        connection.connect(function(err) {
+            if (err) throw err;
+            connection.query(query,[id], function (err, result, fields) {
+              if (err) throw err;
+              console.log(result);
+              response=result;
+            });
+        });
+        connection.end();
         console.log(response)
 
-        return response.recordset;
+        return response;
     }
 }

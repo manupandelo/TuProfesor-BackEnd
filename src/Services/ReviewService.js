@@ -7,27 +7,48 @@ export class ReviewService {
         console.log('Get All Reviews');
         let response;
         let query=`SELECT * from Review`
-        response=await ReviewHelper(undefined, query)
-        console.log(response)
-        return response.recordset;
+        connection.connect(function(err) {
+            if (err) throw err;
+            connection.query(query, function (err, result, fields) {
+              if (err) throw err;
+              console.log(result);
+              response=result;
+            });
+        });
+        connection.end();
+        return response;
     }
 
     getReviewById = async (id) => {
         console.log('Get Review by its ID');
         let response;
-        let query=`SELECT * from Review where idReview = @Id`;
-        response=await ReviewHelper({id}, query)
-        console.log(response)
-        return response.recordset;
+        let query=`SELECT * from Review where idReview = ?`;
+        connection.connect(function(err) {
+            if (err) throw err;
+            connection.query(query,[id], function (err, result, fields) {
+              if (err) throw err;
+              console.log(result);
+              response=result;
+            });
+        });
+        connection.end();
+        return response;
     }
 
     createReview = async (Review) => {
         console.log('create Review in Review Service');
         let response;
-        let query=`INSERT INTO Review(idAlumno, idProfesor, calificacion, nombre, descripcion) VALUES (@IdAlumno, @IdProfesor, @Calificacion, @Nombre, @Descripcion)`
-        response=await ReviewHelper({Review}, query)
-        console.log(response)
-        return response.recordset;
+        let query=`INSERT INTO Review(idAlumno, idProfesor, calificacion, nombre, descripcion) VALUES (?,?,?,?,?)`
+        connection.connect(function(err) {
+            if (err) throw err;
+            connection.query(query,[Review.idAlumno,Review.idProfesor, Review.califacion, Review.nombre, Review.descripcion], function (err, result, fields) {
+              if (err) throw err;
+              console.log(result);
+              response=result;
+            });
+        });
+        connection.end();
+        return response;
     }
 
     updateReviewById = async (id, Review) => {
@@ -50,7 +71,7 @@ export class ReviewService {
                 query=`update Review SET descripcion=@Descripcion, calificacion=@Calificacion where idReview=@Id`
             }
         }
-        response=await ReviewHelper({id, Review}, query)
+        //response=await ReviewHelper({id, Review}, query)
         console.log(response)
         return response.recordset;
     }
@@ -58,10 +79,18 @@ export class ReviewService {
     deleteReviewById = async (id) => {
         console.log('Delete Review by id in Review service');
         let response;
-        let query=`DELETE FROM Review WHERE idReview = @id`;
-        response=await ReviewHelper(undefined, query)
+        let query=`DELETE FROM Review WHERE idReview = ?`;
+        connection.connect(function(err) {
+            if (err) throw err;
+            connection.query(query,[id], function (err, result, fields) {
+              if (err) throw err;
+              console.log(result);
+              response=result;
+            });
+        });
+        connection.end();
         console.log(response)
 
-        return response.recordset;
+        return response;
     }
 }
