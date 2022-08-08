@@ -5,67 +5,74 @@ export class PeticionService {
 
     getPeticion = async () => {
         console.log('Get All Peticiones');
-        let response;
         let query=`SELECT * from Peticion`
       
-        response = await peticionHelper(undefined, query);
-        console.log(response)
-        return response.recordset;
+        connection.query(query, function (err, result, fields) {
+            if (err) throw err;
+            console.log(result);
+            return result;
+      });
     }
 
     getPeticionById = async (id) => {
         console.log('Get Peticion by its ID');
-        let response;
-        let query=`SELECT Profesor.nombre, Profesor.apellido, Peticion.horario, Alumno.nombre from Peticion inner join Alumno on Peticion.idAlumno=Alumno.id inner join Profesor on Peticion.idProfesor=Profesor.id where idPeticion = @id`;
-        response=await peticionHelper({id}, query)
-        console.log(response)
-
-        return response.recordset;
+        let query=`SELECT Profesor.nombre, Profesor.apellido, Peticion.horario, Alumno.nombre from Peticion inner join Alumno on Peticion.idAlumno=Alumno.id inner join Profesor on Peticion.idProfesor=Profesor.id where idPeticion = ?`;
+        connection.query(query,[id],function (err, result, fields) {
+            if (err) throw err;
+            console.log(result);
+            return result;
+      });
     }
 
     createPeticion = async (Peticion) => {
         console.log('create Peticion in Peticion Service');
-        let response;
-        let query=`INSERT INTO Peticion(idAlumno, idProfesor, detalles, horario) VALUES (@IdAlumno, @IdProfesor, @Detalles, @Horario)`
-        response=await peticionHelper({Peticion},query);
-        console.log(response)
-        return response.recordset;
+        console.log(Peticion);
+        let query=`INSERT INTO Peticion(idAlumno, idProfesor, detalles, horario) VALUES (?,?,?,?)`
+        connection.query(query,[Peticion.idAlumno, Peticion.idProfesor, Peticion.detalles, Peticion.horario], function (err, result, fields) {
+            if (err) throw err;
+            console.log('affected rows:' + result.affectedRows);
+            return;
+        });
     }
 
     updatePeticionById = async (id, Peticion) => {
         console.log('Update Peticion by Id in Peticion Service');
         console.log(id, Peticion)
-        let response;
+        let variables;
         let query;
         if(!Peticion.detalles){
             if(!Peticion.horario){
                return "Nada que cambiar";
             }else{
-                query=`update Peticion SET horario=@Horario where idPeticion=@Id`
+                query=`update Peticion SET horario=? where idPeticion=?`
+                variables=[Peticion.horario, id]
             }
         }
         else{
             if(!Peticion.horario){
-                query=`update Peticion SET detalles=@Detalles where idPeticion=@Id`
+                query=`update Peticion SET detalles=? where idPeticion=?`
+                variables=[Peticion.detalles, id]
             }
             else{
-                query=`UPDATE Peticion SET detalles=@Detalles, horario=@Horario WHERE idPeticion = @id`;
+                query=`UPDATE Peticion SET detalles=?, horario=? WHERE idPeticion = ?`;
+                variables=[Peticion.detalles, Peticion.horario, id]
             }
         }
-        response = await peticionHelper({peticion, id},query);
-        console.log(response)
-
-        return response.recordset;
+        connection.query(query,variables, function (err, result, fields) {
+            if (err) throw err;
+            console.log('affected rows:' + result.affectedRows);
+            return;
+        });
     }
 
     deletePeticionById = async (id) => {
         console.log('Delete peticion by id in Peticion service');
-        let response;
-        let query=`DELETE FROM Peticion WHERE idPeticion = @id`;
-        const pool = await sql.connect(config);
-        response = await peticionHelper(undefined,query);
-        console.log(response)
-
-        return response.recordset;
+        
+        let query=`DELETE FROM Peticion WHERE idPeticion = ?`;
+        connection.query(query,[id], function (err, result, fields) {
+            if (err) throw err;
+            console.log('affected rows:' + result.affectedRows);
+            return;
+          });
     }
 }

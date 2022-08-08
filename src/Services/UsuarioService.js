@@ -10,7 +10,7 @@ export class UsuarioService {
     
     getUsuario = async () => {
         console.log('Get all Usuarios in Usuario Service');
-        let response;
+        
         let query="SELECT * FROM Usuario";
         connection.query(query, function (err, result, fields) {
               if (err) throw err;
@@ -30,7 +30,7 @@ export class UsuarioService {
     }
 
     LogIn = async (Usuario)=> {
-        let response;
+        
         let query=`Select * from Usuario where email=?`;
         connection.query(query,[Usuario.email], function (err, result, fields) {
             if (err) throw err;
@@ -53,7 +53,7 @@ export class UsuarioService {
 
     createUsuario = async (Usuario) => {
         console.log('Create New Usuario in Usuario Service');
-        let response;
+        
         let exists;
         let query2=`select * from Usuario where email=?`
         connection.query(query2,[Usuario.email], function (err, result, fields) {
@@ -65,14 +65,12 @@ export class UsuarioService {
             Usuario.password = await bcrypt.hash(Usuario.password, 10);
             console.log(Usuario.password);
             let query=`INSERT INTO Usuario(email, password, tipo) VALUES (?, ?, ?)`;
-                connection.query(query,[Usuario.email,Usuario.password,Usuario.tipo], function (err, result, fields) {
-                  if (err) throw err;
-                  console.log('Affected rows:' + result.affectedRows);
-                  console.log(result);
-                  response=result;
-                });//response=await UsuarioHelper({Usuario}, query)
-            console.log(response)
-            return response;
+            connection.query(query,[Usuario.email,Usuario.password,Usuario.tipo], function (err, result, fields) {
+                if (err) throw err;
+                console.log('Affected rows:' + result.affectedRows);
+                console.log(result);
+                return result;
+            });//response=await UsuarioHelper({Usuario}, query)
         }else{
             return "Usuario ya existente"
         }
@@ -81,7 +79,7 @@ export class UsuarioService {
 
     updateUsuarioById = async (id, Usuario) => {
         console.log('Update Usuario by ID in Usuario Service');
-        let response;
+        
         let count=0;
         let values;
         let comma=false
@@ -103,24 +101,22 @@ export class UsuarioService {
         if(count==0){return "Nada que cambiar"}
         else{
         query+=` where id=${id}`;
+        console.log(query);
         connection.query(query,[], function (err, result, fields) {
               if (err) throw err;
               console.log('affected rows: ' + result.affectedRows);
-              response=result;
+              return result;
         });//response=await UsuarioHelper({id, Usuario}, query);
-        console.log(Usuario)
-        console.log(response)
         }
-        return response;
     }
 
     deleteUsuarioById = async (id) => {
         console.log('Delete Usuario by ID in Usuario Service');
-        let response;
-        let query=`DELETE FROM Usuario WHERE id = @Id`;
-        connection.query(query,[], function (err, result, fields) {
+        let query=`DELETE FROM Usuario WHERE id = ?`;
+        connection.query(query,[id], function (err, result, fields) {
               if (err) throw err;
               console.log('affected rows:' + result.affectedRows);
+              return;
             });//response = await UsuarioHelper(undefined, query);
     }
 }
