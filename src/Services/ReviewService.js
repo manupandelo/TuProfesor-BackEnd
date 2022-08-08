@@ -7,15 +7,12 @@ export class ReviewService {
         console.log('Get All Reviews');
         let response;
         let query=`SELECT * from Review`
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query, function (err, result, fields) {
+        connection.query(query, function (err, result, fields) {
               if (err) throw err;
               console.log(result);
               response=result;
             });
-        });
-        connection.end();
+        
         return response;
     }
 
@@ -23,15 +20,12 @@ export class ReviewService {
         console.log('Get Review by its ID');
         let response;
         let query=`SELECT * from Review where idReview = ?`;
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query,[id], function (err, result, fields) {
+        connection.query(query,[id], function (err, result, fields) {
               if (err) throw err;
               console.log(result);
               response=result;
             });
-        });
-        connection.end();
+        
         return response;
     }
 
@@ -39,15 +33,12 @@ export class ReviewService {
         console.log('create Review in Review Service');
         let response;
         let query=`INSERT INTO Review(idAlumno, idProfesor, calificacion, nombre, descripcion) VALUES (?,?,?,?,?)`
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query,[Review.idAlumno,Review.idProfesor, Review.califacion, Review.nombre, Review.descripcion], function (err, result, fields) {
+        connection.query(query,[Review.idAlumno,Review.idProfesor, Review.califacion, Review.nombre, Review.descripcion], function (err, result, fields) {
               if (err) throw err;
               console.log(result);
               response=result;
             });
-        });
-        connection.end();
+        
         return response;
     }
 
@@ -80,15 +71,12 @@ export class ReviewService {
         console.log('Delete Review by id in Review service');
         let response;
         let query=`DELETE FROM Review WHERE idReview = ?`;
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query,[id], function (err, result, fields) {
+        connection.query(query,[id], function (err, result, fields) {
               if (err) throw err;
               console.log(result);
               response=result;
             });
-        });
-        connection.end();
+        
         console.log(response)
 
         return response;

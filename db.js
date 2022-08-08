@@ -8,4 +8,9 @@ var connection = mysql.createConnection({
   database:'tuprofesorbackend'
 });
 
+connection.connect(function(err) {
+  if (err) throw err;
+  console.log("Database Connected!");
+});
+
 export default connection;

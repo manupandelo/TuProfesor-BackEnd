@@ -33,7 +33,7 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
   console.log(`Create Usuario`);
-  if(!req.body.email || !req.body.password || !req.body.tipo){
+  if(!req.body.email || !req.body.password || !req.body.tipo || !req.body.email.isEmail() || !req.body.password.isLength(6,20)){
     return res.status(400).json("Llenar todos los datos");
   }
   else{

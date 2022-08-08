@@ -49,15 +49,11 @@ export class ProfesorService {
         console.log('Get Profesor by its ID in Profesor Service');
         let query1=`SELECT nombre, apellido, disponibilidad, ubicacion, tipo from Profesor where id = @id`
         let query2=`SELECT * from Review where idProfesor = @id`
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query,[id], function (err, result, fields) {
+        connection.query(query,[id], function (err, result, fields) {
               if (err) throw err;
               console.log(result);
               response=result;
             });
-        });
-        connection.end();
         console.log(response)
         //fijarse para agregar reviews
         return response;
@@ -67,15 +63,12 @@ export class ProfesorService {
         console.log('Get Peticion by the Teacher ID');
         let response;
         let query=`SELECT * from Peticion where idProfesor = @Id`;
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query,[id], function (err, result, fields) {
+        connection.query(query,[id], function (err, result, fields) {
               if (err) throw err;
               console.log(result);
               response=result;
             });
-        });
-        connection.end();
+        
         console.log(response)
 
         return response;
@@ -88,15 +81,12 @@ export class ProfesorService {
         let responsetype;
         let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, idUser) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         let query2=`select * from Usuario where id=@Id`
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query,[id], function (err, result, fields) {
+        connection.query(query,[id], function (err, result, fields) {
               if (err) throw err;
               console.log(result);
               responsetype=result;
             });
-        });
-        connection.end();
+        
         console.log(responsetype)//responsetype=await UsuarioHelper({id},query2)
         console.log(responsetype[0].tipo)
         if(responsetype[0].tipo==true){
@@ -160,15 +150,12 @@ export class ProfesorService {
         console.log('Delete Profesor by ID in Profesor Service');
         let response;
         let query=`DELETE FROM Profesor WHERE id = @Id`;
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query,[id], function (err, result, fields) {
+        connection.query(query,[id], function (err, result, fields) {
               if (err) throw err;
               console.log(result);
               response=result;
             });
-        });
-        connection.end();
+        
         console.log(response)
 
         return response;

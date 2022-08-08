@@ -12,45 +12,31 @@ export class UsuarioService {
         console.log('Get all Usuarios in Usuario Service');
         let response;
         let query="SELECT * FROM Usuario";
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query, function (err, result, fields) {
+        connection.query(query, function (err, result, fields) {
               if (err) throw err;
               console.log(result);
-              response=result;
-            });
+              return result;
         });
-        connection.end();
-        return response;
     }
 
     getUsuarioById = async (id) => {
         console.log('Get Usuario by its ID in Usuario Service');
         let query=`SELECT email, password, TipoUsuario.nombre as Tipo from Usuario JOIN TipoClase on Usuario.tipo = TipoUsuario.id where id = ?`
-        connection.connect(function(err) {
+        connection.query(query,[id], function (err, result, fields) {
             if (err) throw err;
-            connection.query(query,[id], function (err, result, fields) {
-              if (err) throw err;
-              console.log(result);
-              response=result;
-            });
+            console.log(result);
+            return result;
         });
-        connection.end();
-        return response;
     }
 
     LogIn = async (Usuario)=> {
         let response;
-        let query=`Select * from Usuario where email=@Email`;
-        connection.connect(function(err) {
+        let query=`Select * from Usuario where email=?`;
+        connection.query(query,[Usuario.email], function (err, result, fields) {
             if (err) throw err;
-            connection.query(query,[Usuario.email], function (err, result, fields) {
-              if (err) throw err;
-              console.log(result);
-              response=result;
-            });
+            console.log(result);
+            response=result;
         });
-        connection.end();
         console.log(response);
         if(response[0]==undefined){
             return "Email incorrecto"
@@ -70,29 +56,21 @@ export class UsuarioService {
         let response;
         let exists;
         let query2=`select * from Usuario where email=?`
-        connection.connect(function(err) {
+        connection.query(query2,[Usuario.email], function (err, result, fields) {
             if (err) throw err;
-            connection.query(query2,[Usuario.email], function (err, result, fields) {
-              if (err) throw err;
-              console.log(result);
-              exists=result;
-            });
-        });
-        connection.end();//exists=await UsuarioHelper({Usuario}, query2);
-        if(exists.recordset[0]==(undefined||null||NaN)){
+            console.log(result);
+            exists=result;
+        });//exists=await UsuarioHelper({Usuario}, query2);
+        if(exists[0]==(undefined||null||NaN)){
             Usuario.password = await bcrypt.hash(Usuario.password, 10);
             console.log(Usuario.password);
             let query=`INSERT INTO Usuario(email, password, tipo) VALUES (?, ?, ?)`;
-            connection.connect(function(err) {
-                if (err) throw err;
                 connection.query(query,[Usuario.email,Usuario.password,Usuario.tipo], function (err, result, fields) {
                   if (err) throw err;
                   console.log('Affected rows:' + result.affectedRows);
                   console.log(result);
                   response=result;
-                });
-            });
-            connection.end();//response=await UsuarioHelper({Usuario}, query)
+                });//response=await UsuarioHelper({Usuario}, query)
             console.log(response)
             return response;
         }else{
@@ -125,15 +103,11 @@ export class UsuarioService {
         if(count==0){return "Nada que cambiar"}
         else{
         query+=` where id=${id}`;
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query,[], function (err, result, fields) {
+        connection.query(query,[], function (err, result, fields) {
               if (err) throw err;
               console.log('affected rows: ' + result.affectedRows);
               response=result;
-            });
-        });
-        connection.end();//response=await UsuarioHelper({id, Usuario}, query);
+        });//response=await UsuarioHelper({id, Usuario}, query);
         console.log(Usuario)
         console.log(response)
         }
@@ -144,13 +118,9 @@ export class UsuarioService {
         console.log('Delete Usuario by ID in Usuario Service');
         let response;
         let query=`DELETE FROM Usuario WHERE id = @Id`;
-        connection.connect(function(err) {
-            if (err) throw err;
-            connection.query(query,[], function (err, result, fields) {
+        connection.query(query,[], function (err, result, fields) {
               if (err) throw err;
               console.log('affected rows:' + result.affectedRows);
-            });
-        });
-        connection.end();//response = await UsuarioHelper(undefined, query);
+            });//response = await UsuarioHelper(undefined, query);
     }
 }
