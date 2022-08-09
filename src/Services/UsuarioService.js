@@ -10,45 +10,48 @@ export class UsuarioService {
     
     getUsuario = async () => {
         console.log('Get all Usuarios in Usuario Service');
-        
         let query="SELECT * FROM Usuario";
+        let Usuarios;
         connection.query(query, function (err, result, fields) {
               if (err) throw err;
               console.log(result);
               return result;
         });
+        console.log(Usuarios);
+        return Usuarios;
     }
 
     getUsuarioById = async (id) => {
         console.log('Get Usuario by its ID in Usuario Service');
-        let query=`SELECT email, password, TipoUsuario.nombre as Tipo from Usuario JOIN TipoClase on Usuario.tipo = TipoUsuario.id where id = ?`
+        let query=`SELECT email, password, TipoUsuario.nombre as Tipo from Usuario JOIN TipoUsuario on Usuario.tipo = TipoUsuario.id where Usuario.id = ?`
+        let Usuario;
         connection.query(query,[id], function (err, result, fields) {
             if (err) throw err;
             console.log(result);
-            return result;
+            Usuario = result;
         });
+        return Usuario;
     }
 
     LogIn = async (Usuario)=> {
-        
+        console.log("Mail: " + Usuario.email);
+        console.log("Password: " + Usuario.password);
         let query=`Select * from Usuario where email=?`;
         connection.query(query,[Usuario.email], function (err, result, fields) {
             if (err) throw err;
-            console.log(result);
-            response=result;
+            if(result[0]==undefined){
+                return "Email incorrecto"
+            }
+            if(bcrypt.compareSync(Usuario.password, result[0].password)){
+                console.log("true")
+                result[0].token=tokenService.getToken(result[0]);
+                console.log(result[0])
+                return result;
+            }else{
+                console.log("false")
+                return "Error, reintentar";
+            }
         });
-        console.log(response);
-        if(response[0]==undefined){
-            return "Email incorrecto"
-        }
-        if(bcrypt.compareSync(Usuario.password, response[0].password)){
-            console.log("true")
-            response[0].token=tokenService.getToken(response.recordset[0]);
-            return response;
-        }else{
-            console.log("false")
-            return "Error, reintentar";
-        }
     }
 
     createUsuario = async (Usuario) => {
