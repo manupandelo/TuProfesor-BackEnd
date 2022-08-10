@@ -5,13 +5,13 @@ import { ReviewService } from '../Services/ReviewService.js';
 const router = Router();
 const reviewService = new ReviewService();
 
-router.get('', Authenticate, async (req, res) => {
+router.get('', /*Authenticate,*/ async (req, res) => {
   console.log(`This is a get operation`);
   const Reviews = await reviewService.getReviews();
   return res.status(200).json(Reviews);
 });
 
-router.get('/:id', Authenticate, async (req, res) => {
+router.get('/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a get operation`);
 
@@ -20,7 +20,7 @@ router.get('/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Reviews);
 });
 
-router.post('', Authenticate, async (req, res) => {
+router.post('', /*Authenticate,*/ async (req, res) => {
   console.log(`Create Review`);
   if(!req.body.idProfesor || !req.body.idAlumno || !req.body.nombre || !req.body.calificacion || req.body.califacion>5 || req.body.califacion<=0 || req.body.califacion==NaN){
     return res.status(400).json("Llenar todos los datos");
@@ -31,7 +31,7 @@ router.post('', Authenticate, async (req, res) => {
   }
 });
 
-router.put('/:id', Authenticate, async (req, res) => {
+router.put('/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`Update Review`);
 
@@ -40,7 +40,7 @@ router.put('/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Reviews);
 });
 
-router.delete('/:id', Authenticate, async (req, res) => {
+router.delete('/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`Delete Review`);
 

@@ -11,7 +11,7 @@ router.get('',/*Authenticate,*/ async (req, res) => {
   return res.status(200).json(Usuarios);
 });
 
-router.get('/id/:id', Authenticate, async (req, res) => {
+router.get('/id/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a get operation`);
 
@@ -42,7 +42,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.put('/:id', Authenticate, async (req, res) => {
+router.put('/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`Update Usuario`);
 
@@ -51,7 +51,7 @@ router.put('/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Usuario);
 });
 
-router.delete('/:id', Authenticate, async (req, res) => {
+router.delete('/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`Delete Usuario`);
 

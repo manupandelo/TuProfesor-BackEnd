@@ -5,13 +5,13 @@ import { AlumnoService } from '../Services/AlumnoService.js';
 const router = Router();
 const alumnoService = new AlumnoService();
 
-router.get('', Authenticate, async (req, res) => {
+router.get('', /*Authenticate,*/ async (req, res) => {
   console.log(`Get Alumnos`);
   const Alumnos = await alumnoService.getAlumno();
   return res.status(200).json(Alumnos);
 });
 
-router.get('/:id', Authenticate, async (req, res) => {
+router.get('/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`Get Alumno`);
 
@@ -20,7 +20,7 @@ router.get('/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Alumno);
 });
 
-router.get('/peticion/:id', Authenticate, async (req, res) => {
+router.get('/peticion/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`Get Peticiones from an user`);
 
@@ -29,7 +29,7 @@ router.get('/peticion/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Peticion);
 });
 
-router.get('/reviews/:id', Authenticate, async (req, res) => {
+router.get('/reviews/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`Get Peticiones from an user`);
 
@@ -38,7 +38,7 @@ router.get('/reviews/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Peticion);
 });
 
-router.post('', Authenticate, async (req, res) => {
+router.post('', /*Authenticate,*/ async (req, res) => {
   console.log(`This is a post operation`);
   if(!req.body.nombre || !req.body.apellido || !req.body.ubicacion || !req.body.idUser){
     return res.status(400).json("Llenar todos los datos");
@@ -49,7 +49,7 @@ router.post('', Authenticate, async (req, res) => {
   }
 });
 
-router.put('/:id', Authenticate, async (req, res) => {
+router.put('/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a put operation`);
 
@@ -58,7 +58,7 @@ router.put('/:id', Authenticate, async (req, res) => {
   return res.status(200).json(Alumno);
 });
 
-router.delete('/:id', Authenticate, async (req, res) => {
+router.delete('/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a delete operation`);
 
