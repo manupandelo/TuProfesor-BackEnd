@@ -1,7 +1,7 @@
 import express from "express";
 //import cors from "cors";
-import passport from 'passport';
-import jwtStrategy from './src/Common/jwt.strategy';
+//import passport from 'passport';
+//import jwtStrategy from './src/Common/jwt.strategy';
 import AlumnoRouter from './src/Controllers/AlumnoController.js';
 import ProfesorRouter from './src/Controllers/ProfesorController.js';
 import PeticionRouter from './src/Controllers/PeticionController.js';
@@ -14,8 +14,8 @@ var app = express();
 
 //app.use(cors());
 app.use(express.json());
-passport.use(jwtStrategy);
-app.use(passport.initialize());
+//passport.use(jwtStrategy);
+//app.use(passport.initialize());
 
 
 app.use("/users", UsuarioRouter);
