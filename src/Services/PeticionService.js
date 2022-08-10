@@ -6,33 +6,27 @@ export class PeticionService {
     getPeticion = async () => {
         console.log('Get All Peticiones');
         let query=`SELECT * from Peticion`
-      
-        connection.query(query, function (err, result, fields) {
-            if (err) throw err;
-            console.log(result);
-            return result;
-      });
+        const [result,fields] = await connection.execute(query);
+        console.log(result);
+        return result;
     }
 
     getPeticionById = async (id) => {
         console.log('Get Peticion by its ID');
         let query=`SELECT Profesor.nombre, Profesor.apellido, Peticion.horario, Alumno.nombre from Peticion inner join Alumno on Peticion.idAlumno=Alumno.id inner join Profesor on Peticion.idProfesor=Profesor.id where idPeticion = ?`;
-        connection.query(query,[id],function (err, result, fields) {
-            if (err) throw err;
-            console.log(result);
-            return result;
-      });
+        const [result,fields] = await connection.execute(query,[id]);
+        console.log(result);
+        return result;
     }
 
     createPeticion = async (Peticion) => {
         console.log('create Peticion in Peticion Service');
         console.log(Peticion);
         let query=`INSERT INTO Peticion(idAlumno, idProfesor, detalles, horario) VALUES (?,?,?,?)`
-        connection.query(query,[Peticion.idAlumno, Peticion.idProfesor, Peticion.detalles, Peticion.horario], function (err, result, fields) {
-            if (err) throw err;
-            console.log('affected rows:' + result.affectedRows);
-            return;
-        });
+        const [result,fields] = await connection.execute(query,[Peticion.idAlumno, Peticion.idProfesor, Peticion.detalles, Peticion.horario]);
+        console.log("Row affected: " + result.rowsAffected);
+        console.log(result);
+        return result;
     }
 
     updatePeticionById = async (id, Peticion) => {
@@ -58,21 +52,19 @@ export class PeticionService {
                 variables=[Peticion.detalles, Peticion.horario, id]
             }
         }
-        connection.query(query,variables, function (err, result, fields) {
-            if (err) throw err;
-            console.log('affected rows:' + result.affectedRows);
-            return;
-        });
+        const [result,fields] = await connection.execute(query,variables);
+        console.log("Rows affected: " + result.rowsAffected);
+        console.log(result);
+        return result;
     }
 
     deletePeticionById = async (id) => {
         console.log('Delete peticion by id in Peticion service');
         
         let query=`DELETE FROM Peticion WHERE idPeticion = ?`;
-        connection.query(query,[id], function (err, result, fields) {
-            if (err) throw err;
-            console.log('affected rows:' + result.affectedRows);
-            return;
-          });
+        const [result,fields] = await connection.execute(query,[id]);
+        console.log("Rows affected: " + result.rowsAffected);
+        console.log(result);    
+        return result;
     }
 }

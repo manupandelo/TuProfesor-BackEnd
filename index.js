@@ -1,20 +1,22 @@
 import express from "express";
-import cors from "cors";
+//import cors from "cors";
 import passport from 'passport';
-import jwtStrategy from './src/common/jwt.strategy.js';
+import jwtStrategy from "./src/Common/jwt.strategy.js";
 import AlumnoRouter from "./src/Controllers/AlumnoController.js";
 import ProfesorRouter from "./src/controllers/ProfesorController.js";
 import PeticionRouter from "./src/controllers/PeticionController.js";
 import ReviewRouter from "./src/controllers/ReviewController.js";
 import UsuarioRouter from "./src/controllers/UsuarioController.js";
 
-const port=3000;
-const app = express();
 
-app.use(cors());
+const port=3000;
+var app = express();
+
+//app.use(cors());
 app.use(express.json());
 passport.use(jwtStrategy);
 app.use(passport.initialize());
+
 
 app.use("/users", UsuarioRouter);
 app.use("/students", AlumnoRouter)

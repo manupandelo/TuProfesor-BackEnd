@@ -21,7 +21,15 @@ const jwtStrategy = new Strategy(opt, (jwt_payload, done) => {
 export default jwtStrategy;
 
 export const Authenticate = (req, res, next) => {
-  let token = req.headers['authorization']
+  passport.authenticate(jwtStrategy, (err, user) => {
+    console.log(user);
+    if (err) res.status(401).send({ message: 'Unauthorized' });
+    if (!user) res.status(401).send({ message: 'Unauthorized' });
+    else {
+      next();
+    }
+  })(req, res, next);
+  /*let token = req.headers['authorization']
   token = token.replace("Bearer ", "")
   // console.log(token);
 
@@ -29,5 +37,5 @@ export const Authenticate = (req, res, next) => {
   if(isValid){
     return next()
   }
-  return res.status(401).send({ message: 'Unauthorized' });
+  return res.status(401).send({ message: 'Unauthorized' });*/
 };
