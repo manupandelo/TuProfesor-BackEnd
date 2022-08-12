@@ -11,13 +11,21 @@ router.get('', async (req, res) => {
   return res.status(200).json(Profesors);
 });
 
-router.get('/:id', /*Authenticate,*/ async (req, res) => {
+router.get('/id/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a get operation`);
 
   const Profesor = await profesorService.getProfesorById(req.params.id);
 
   return res.status(200).json(Profesor);
+});
+
+router.get('/materias', /*Authenticate,*/ async (req, res) => {
+  console.log(`This is a get operation`);
+
+  const materias = await profesorService.getMaterias();
+
+  return res.status(200).json(materias);
 });
 
 router.get('/peticion/:id', /*Authenticate,*/ async (req, res) => {

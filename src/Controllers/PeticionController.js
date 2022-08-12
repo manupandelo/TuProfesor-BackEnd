@@ -11,7 +11,7 @@ router.get('', /*Authenticate,*/ async (req, res) => {
   return res.status(200).json(Peticions);
 });
 
-router.get('/:id', /*Authenticate,*/ async (req, res) => {
+router.get('/id/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a get operation`);
 

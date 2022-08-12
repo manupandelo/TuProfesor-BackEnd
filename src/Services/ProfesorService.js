@@ -3,15 +3,22 @@ import connection from '../../db.js'
 
 export class ProfesorService {
 
+    getMaterias = async() => {
+        let query=`Select Materia From materia`
+        const [result,fields] = await connection.execute(query);
+        console.log(result);
+        return result;
+    }
+    
     getProfesor = async (ubicacion, materia, tipo, activo) => {
         console.log('Get all Profesores by user preferences in Profesor Service');
-        let query=`SELECT nombre, apellido, ubicacion, tipo, activo from Profesor join MateriaXProfesor on Profesor.id = MateriaXProfesor.idProfesor join Materia on MateriaXProfesor.idMateria=Materia.id`; 
+        let query=`SELECT nombre, apellido, ubicacion, tipo, activo from profesor join materiaxprofesor on profesor.id = materiaxprofesor.idProfesor join materia on materiaxprofesor.idMateria=materia.id`; 
         let where=false
         let agregar=''
         let values=[];
         if(materia){
             where = true;
-            agregar+=`Materia.nombre=?`
+            agregar+=`materia.nombre=?`
             values.push(materia)
         }if(ubicacion){
             if(where){
@@ -52,12 +59,16 @@ export class ProfesorService {
 
     getProfesorById = async (id) => {
         console.log('Get Profesor by its ID in Profesor Service');
-        let query=`SELECT nombre, apellido, disponibilidad, ubicacion, tipo from Profesor where id = ?`
-        let query2=`SELECT * from Review where idProfesor = ?`
-        const [result,fields] = await connection.execute(query);
+        let query=`Select * from profesor where id=?`
+        let query2=`SELECT * from review where idProfesor = ?`
+        let query3=`Select Materia from materia join materiaxprofesor on materia.id=materiaxprofesor.idMateria where materiaxprofesor.idProfesor = ?`
+        const [result,fields] = await connection.execute(query,[id]);
         console.log(result);
         const [result2,fields2] = await connection.execute(query2,[id]);
         result[0].reviews = result2;
+        const [result3,fields3] = await connection.execute(query3,[id]);
+        result[0].materias = result3;
+        console.log(result)
         return result;
         //fijarse para agregar reviews
     }

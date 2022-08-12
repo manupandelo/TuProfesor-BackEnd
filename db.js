@@ -6,10 +6,6 @@ var connection = await mysql.createConnection({
   user: process.env.user,
   password: process.env.pass,
   database: process.env.base
-  /*host:'mysql.malamud.com.ar',
-  user:'tuprofesorback',
-  password:'TuProfesorBackend!#',
-  database:'tuprofesorbackend'*/
 });
 
 connection.connect(function(err) {
