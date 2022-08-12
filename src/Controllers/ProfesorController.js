@@ -11,6 +11,12 @@ router.get('', async (req, res) => {
   return res.status(200).json(Profesors);
 });
 
+router.get('/activos', async (req, res) => {
+  console.log(`This is a get operation`);
+  const Profesors = await profesorService.getProfesoresActivos();
+  return res.status(200).json(Profesors);
+});
+
 router.get('/id/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a get operation`);

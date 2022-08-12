@@ -23,9 +23,9 @@ export class ReviewService {
         console.log('create Review in Review Service');
         let query=`INSERT INTO Review(idAlumno, idProfesor, calificacion, nombre, descripcion) VALUES (?,?,?,?,?)`
         const [result,fields] = await connection.execute(query,[Review.idAlumno, Review.idProfesor, Review.calificacion, Review.nombre, Review.descripcion]);
-            console.log('Affected rows:' + result.affectedRows);
-            console.log(result);
-            return result;
+        console.log('Affected rows:' + result.affectedRows);
+        console.log(result);
+        return result;
     }
 
     updateReviewById = async (id, Review) => {

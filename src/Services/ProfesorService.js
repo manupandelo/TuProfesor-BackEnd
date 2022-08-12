@@ -12,13 +12,15 @@ export class ProfesorService {
     
     getProfesor = async (ubicacion, materia, tipo, activo) => {
         console.log('Get all Profesores by user preferences in Profesor Service');
-        let query=`SELECT nombre, apellido, ubicacion, tipo, activo from profesor join materiaxprofesor on profesor.id = materiaxprofesor.idProfesor join materia on materiaxprofesor.idMateria=materia.id`; 
+        let query=`SELECT profesor.nombre, profesor.apellido, tipoClase.nombre as TipoClase, profesor.ubicacion  from profesor join tipoclase on profesor.tipo=tipoclase.idTipo`; 
         let where=false
         let agregar=''
+        let before=''
         let values=[];
         if(materia){
             where = true;
-            agregar+=`materia.nombre=?`
+            before+=`join materiaxprofesor on profesor.id = materiaxprofesor.idProfesor join materia on materiaxprofesor.idMateria=materia.id`
+            agregar+=`materia.Materia=?`
             values.push(materia)
         }if(ubicacion){
             if(where){
@@ -31,28 +33,26 @@ export class ProfesorService {
             }
         }if(tipo){
             if(where){
-                agregar+=` and tipo=?`;
+                agregar+=` and tipoclase.nombre=?`;
                 values.push(tipo)
             }else{
                 where=true
-                agregar+=`tipo=? `
+                agregar+=`tipoclase.nombre=? `
                 values.push(tipo)
-            }
-        }if(activo){
-            if(where){
-                agregar+=` and activo=?`
-                values.push(activo)
-            }
-            else{
-                where=true
-                agregar+=`activo=? `
             }
         }
         if(where){
-            query+=" WHERE " + agregar /*+ "order by (Select AVG())"*/
-        }//ARREGLAR PORFA, No funciona tipo, activo y materia 
-
+            query+=before + " WHERE " + agregar 
+        }
+        console.log(query)
         const [result,fields] = await connection.execute(query,values);
+        console.log(result);
+        return result;
+    }
+
+    getProfesoresActivos = async() => {
+        let query=`SELECT * from profesor where activo=1`; 
+        const [result,fields] = await connection.execute(query);
         console.log(result);
         return result;
     }
