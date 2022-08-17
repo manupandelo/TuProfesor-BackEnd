@@ -1,5 +1,5 @@
 import express from "express";
-//import cors from "cors";
+import cors from "cors";
 //import passport from 'passport';
 //import jwtStrategy from './src/Common/jwt.strategy';
 import AlumnoRouter from './src/Controllers/AlumnoController.js';
@@ -12,7 +12,7 @@ import UsuarioRouter from './src/Controllers/UsuarioController.js';
 const port=3000;
 var app = express();
 
-//app.use(cors());
+app.use(cors());
 app.use(express.json());
 //passport.use(jwtStrategy);
 //app.use(passport.initialize());
