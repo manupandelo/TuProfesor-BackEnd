@@ -22,6 +22,7 @@ router.get('/id/:id', /*Authenticate,*/ async (req, res) => {
 
 router.post('/login', async (req, res) => {
   console.log(`Log In`)
+  console.log(req.body);
   if(!req.body.email || !req.body.password){
     return res.status(400).json("Error, llenar los datos por completo");
   }else{
