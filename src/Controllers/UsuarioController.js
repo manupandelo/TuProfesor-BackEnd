@@ -39,7 +39,6 @@ router.post('/register', async (req, res) => {
   }
   else{
     const Usuario = await usuarioService.createUsuario(req.body);
-    res.header("Access-Control-Allow-Origin", "*");
     return res.status(201).json(Usuario);
   }
 });
