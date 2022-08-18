@@ -10,10 +10,10 @@ import UsuarioRouter from './src/Controllers/UsuarioController.js';
 
 
 const port=3000;
-var app = express();
+const app = express();
 
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 //passport.use(jwtStrategy);
 //app.use(passport.initialize());
 
