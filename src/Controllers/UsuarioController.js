@@ -28,6 +28,7 @@ router.post('/login', async (req, res) => {
   }else{
     const response = await usuarioService.LogIn(req.body);
     console.log(response)
+    res.header("Access-Control-Allow-Origin", "*");
     return res.status(200).json(response);
   }
 })
@@ -39,6 +40,7 @@ router.post('/register', async (req, res) => {
   }
   else{
     const Usuario = await usuarioService.createUsuario(req.body);
+    res.header("Access-Control-Allow-Origin", "*");
     return res.status(201).json(Usuario);
   }
 });
