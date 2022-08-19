@@ -4,7 +4,7 @@ import connection from '../../db.js'
 export class ProfesorService {
 
     getMaterias = async() => {
-        let query=`Select Materia From materia`
+        let query=`Select * From materia`
         const [result,fields] = await connection.execute(query);
         console.log(result);
         return result;
