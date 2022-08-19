@@ -22,8 +22,8 @@ export class PeticionService {
     createPeticion = async (Peticion) => {
         console.log('create Peticion in Peticion Service');
         console.log(Peticion);
-        let query=`INSERT INTO Peticion(idAlumno, idProfesor, detalles, horario) VALUES (?,?,?,?)`
-        const [result,fields] = await connection.execute(query,[Peticion.idAlumno, Peticion.idProfesor, Peticion.detalles, Peticion.horario]);
+        let query=`INSERT INTO Peticion(idUserAlumno, idProfesor, detalles, horario) VALUES (?,?,?,?)`
+        const [result,fields] = await connection.execute(query,[Peticion.idUserAlumno, Peticion.idProfesor, Peticion.detalles, Peticion.horario]);
         console.log("Row affected: " + result.rowsAffected);
         console.log(result);
         return result;
