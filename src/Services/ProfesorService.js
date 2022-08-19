@@ -4,61 +4,77 @@ import connection from '../../db.js'
 export class ProfesorService {
 
     getMaterias = async() => {
-        let query=`Select * From materia`
+        try{
+            let query=`Select * From materia`
         const [result,fields] = await connection.execute(query);
         console.log(result);
         return result;
+        }   
+        catch(error){
+            return error;
+        }   
     }
     
     getProfesor = async (ubicacion, materia, tipo, activo) => {
-        console.log('Get all Profesores by user preferences in Profesor Service');
-        let query=`SELECT profesor.nombre, profesor.apellido, tipoClase.nombre as TipoClase, profesor.ubicacion  from profesor join tipoclase on profesor.tipo=tipoclase.idTipo`; 
-        let where=false
-        let agregar=''
-        let before=''
-        let values=[];
-        if(materia){
-            where = true;
-            before+=`join materiaxprofesor on profesor.id = materiaxprofesor.idProfesor join materia on materiaxprofesor.idMateria=materia.id`
-            agregar+=`materia.Materia=?`
-            values.push(materia)
-        }if(ubicacion){
-            if(where){
-                agregar+=` and ubicacion=?`;
-                values.push(ubicacion)
-            }else{
-                where=true
-                agregar+=`ubicacion=? `
-                values.push(ubicacion)
+        try{
+            console.log('Get all Profesores by user preferences in Profesor Service');
+            let query=`SELECT profesor.nombre, profesor.apellido, tipoClase.nombre as TipoClase, profesor.ubicacion  from profesor join tipoclase on profesor.tipo=tipoclase.idTipo`; 
+            let where=false
+            let agregar=''
+            let before=''
+            let values=[];
+            if(materia){
+                where = true;
+                before+=`join materiaxprofesor on profesor.id = materiaxprofesor.idProfesor join materia on materiaxprofesor.idMateria=materia.id`
+                agregar+=`materia.Materia=?`
+                values.push(materia)
+            }if(ubicacion){
+                if(where){
+                    agregar+=` and ubicacion=?`;
+                    values.push(ubicacion)
+                }else{
+                    where=true
+                    agregar+=`ubicacion=? `
+                    values.push(ubicacion)
+                }
+            }if(tipo){
+                if(where){
+                    agregar+=` and tipoclase.nombre=?`;
+                    values.push(tipo)
+                }else{
+                    where=true
+                    agregar+=`tipoclase.nombre=? `
+                    values.push(tipo)
+                }
             }
-        }if(tipo){
             if(where){
-                agregar+=` and tipoclase.nombre=?`;
-                values.push(tipo)
-            }else{
-                where=true
-                agregar+=`tipoclase.nombre=? `
-                values.push(tipo)
+                query+=before + " WHERE " + agregar 
             }
-        }
-        if(where){
-            query+=before + " WHERE " + agregar 
-        }
-        console.log(query)
-        const [result,fields] = await connection.execute(query,values);
-        console.log(result);
-        return result;
+            console.log(query)
+            const [result,fields] = await connection.execute(query,values);
+            console.log(result);
+            return result;
+        }   
+        catch(error){
+            return error;
+        }   
     }
 
     getProfesoresActivos = async() => {
-        let query=`SELECT * from profesor where activo=1`; 
-        const [result,fields] = await connection.execute(query);
-        console.log(result);
-        return result;
+        try{
+            let query=`SELECT * from profesor where activo=1`; 
+            const [result,fields] = await connection.execute(query);
+            console.log(result);
+            return result;
+        }   
+        catch(error){
+            return error;
+        }   
     }
 
     getProfesorById = async (id) => {
-        console.log('Get Profesor by its ID in Profesor Service');
+        try{
+            console.log('Get Profesor by its ID in Profesor Service');
         let query=`Select * from profesor where id=?`
         let query2=`SELECT * from review where idProfesor = ?`
         let query3=`Select Materia from materia join materiaxprofesor on materia.id=materiaxprofesor.idMateria where materiaxprofesor.idProfesor = ?`
@@ -70,15 +86,24 @@ export class ProfesorService {
         result[0].materias = result3;
         console.log(result)
         return result;
+        }   
+        catch(error){
+            return error;
+        }   
         //fijarse para agregar reviews
     }
 
     getPeticionByTeacherId = async (id) => {
-        console.log('Get Peticion by the Teacher ID');
-        let query=`SELECT * from Peticion where idProfesor = ?`;
-        const [result,fields] = await connection.execute(query,[id]);
-        console.log(result);
-        return result;
+        try{
+            console.log('Get Peticion by the Teacher ID');
+            let query=`SELECT * from Peticion where idProfesor = ?`;
+            const [result,fields] = await connection.execute(query,[id]);
+            console.log(result);
+            return result;
+        }   
+        catch(error){
+            return error;
+        }   
     }
 
     createProfesor = async (Profesor) => {
@@ -101,54 +126,64 @@ export class ProfesorService {
     }
 
     updateProfesorById = async (id, Profesor) => {
-        console.log('Update Profesor by ID in Profesor Service');
-        let count=0;
-        let comma=false
-        let values=[];
-        let query=`UPDATE Profesor SET`;
-        if(Profesor.telefono){
-            query+=` telefono=?`
-            comma=true;
-            count++;
-            values.push(Profesor.telefono);
-        }if(Profesor.ubicacion){
-            if(comma==true){
-                query+=`, ubicacion=?`
-                values.push(Profesor.ubicacion);
-            }else{
-                query+=` ubicacion=?`
+        try{
+            console.log('Update Profesor by ID in Profesor Service');
+            let count=0;
+            let comma=false
+            let values=[];
+            let query=`UPDATE Profesor SET`;
+            if(Profesor.telefono){
+                query+=` telefono=?`
                 comma=true;
-                values.push(Profesor.ubicacion);
+                count++;
+                values.push(Profesor.telefono);
+            }if(Profesor.ubicacion){
+                if(comma==true){
+                    query+=`, ubicacion=?`
+                    values.push(Profesor.ubicacion);
+                }else{
+                    query+=` ubicacion=?`
+                    comma=true;
+                    values.push(Profesor.ubicacion);
+                }
+                count++
+            }if(Profesor.activo){
+                if(comma==true){
+                    query+=`, activo=?`
+                    values.push(Profesor.activo);
+                }else{
+                    query+=` activo=?`
+                    comma=true;
+                    values.push(Profesor.activo);
+                }
+                count++;
             }
-            count++
-        }if(Profesor.activo){
-            if(comma==true){
-                query+=`, activo=?`
-                values.push(Profesor.activo);
-            }else{
-                query+=` activo=?`
-                comma=true;
-                values.push(Profesor.activo);
+            if(count==0){return "Nada que cambiar"}
+            else{
+                query+=` where id=?`;
+                values.push(id);
+                const [result,fields] = await connection.execute(query,values);
+                console.log("Rowz affected: " + result.rowsAffected);
+                console.log(result);
+                return result;
             }
-            count++;
         }
-        if(count==0){return "Nada que cambiar"}
-        else{
-            query+=` where id=?`;
-            values.push(id);
-            const [result,fields] = await connection.execute(query,values);
-            console.log("Rowz affected: " + result.rowsAffected);
-            console.log(result);
-            return result;
-        }
+        catch(error){
+            return error
+        }    
     }
 
     deleteProfesorById = async (id) => {
-        console.log('Delete Profesor by ID in Profesor Service');
-        let query=`DELETE FROM Profesor WHERE id=?`;
-        const [result,fields] = await connection.execute(query,[id]);
-        console.log("Rows affected: " + result.rowsAffected);
-        console.log(result);
-        return result;
+        try{
+            console.log('Delete Profesor by ID in Profesor Service');
+            let query=`DELETE FROM Profesor WHERE id=?`;
+            const [result,fields] = await connection.execute(query,[id]);
+            console.log("Rows affected: " + result.rowsAffected);
+            console.log(result);
+            return result;
+        }
+        catch(error){
+            return error;
+        }
     }
 }
