@@ -13,7 +13,7 @@ export class PeticionService {
 
     getPeticionById = async (id) => {
         console.log('Get Peticion by its ID');
-        let query=`SELECT Profesor.nombre, Profesor.apellido, Peticion.horario, Alumno.nombre from Peticion inner join Alumno on Peticion.idAlumno=Alumno.id inner join Profesor on Peticion.idProfesor=Profesor.id where idPeticion = ?`;
+        let query=`SELECT Profesor.nombre, Profesor.apellido, Peticion.horario, Alumno.nombre from Peticion inner join Usuario on Peticion.idAlumno=Usuario.id inner join Alumno on Usuario.id=Alumno.idUser inner join Profesor on Peticion.idProfesor=Profesor.id where idPeticion = ?`;
         const [result,fields] = await connection.execute(query,[id]);
         console.log(result);
         return result;
