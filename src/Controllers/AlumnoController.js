@@ -40,7 +40,7 @@ router.get('/reviews/:id', /*Authenticate,*/ async (req, res) => {
 
 router.post('', /*Authenticate,*/ async (req, res) => {
   console.log(`This is a post operation`);
-  if(!req.body.nombre || !req.body.apellido || !req.body.ubicacion || !req.body.idUser){
+  if(!req.body.nombre || !req.body.apellido || !req.body.ubicacion || !req.body.password || !req.body.email){
     return res.status(400).json("Llenar todos los datos");
   }
   else{
@@ -66,5 +66,18 @@ router.delete('/:id', /*Authenticate,*/ async (req, res) => {
 
   return res.status(200).json(Alumno);
 });
+
+router.post('/login', async (req, res) => {
+  console.log(`Log In Profesor`)
+  console.log(req.body);
+  if(!req.body.email || !req.body.password){
+    return res.status(400).json("Error, llenar los datos por completo");
+  }else{
+    const response = await alumnoService.LogIn(req.body);
+    console.log(response)
+    return res.status(200).json(response);
+  }
+})
+
 
 export default router;

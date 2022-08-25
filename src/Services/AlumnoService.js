@@ -1,5 +1,9 @@
 import 'dotenv/config'
+import { TokenService } from './TokenService.js';
+import bcrypt from 'bcryptjs';
 import connection from '../../db.js'
+
+const tokenService = new TokenService();
 
 export class AlumnoService {
 
@@ -89,7 +93,30 @@ export class AlumnoService {
                 query+=` ubicacion=?`
                 comma=true;
                 count++;
-            }// dejo por el dia en el que haya que meter mas datos
+            }
+            if(Alumno.email){
+                if(comma==true){
+                    query+=`, email=?`
+                    values.push(Alumno.email);
+                }else{
+                    query+=` email=?`
+                    comma=true;
+                    values.push(Alumno.email);
+                }
+                count++
+            }
+            if(Alumno.password){
+                if(comma==true){
+                    query+=`, password=?`
+                    values.push(Alumno.ubicacion);
+                }else{
+                    query+=` password=?`
+                    comma=true;
+                    values.push(Alumno.password);
+                }
+                count++
+            }
+            // dejo por el dia en el que haya que meter mas datos
             if(count==0){return "Nada que cambiar"}
             else{
                 query+=` WHERE id=?`
@@ -116,5 +143,30 @@ export class AlumnoService {
         catch(error){
             return error;
         }   
+    }
+
+    login = async (Usuario) => {
+        try{
+            console.log("Mail: " + Usuario.email);
+            console.log("Password: " + Usuario.password);
+            let query=`Select * from Alumno where email=?`;
+            const [result,fields] = await connection.execute(query,[Usuario.email]);
+            console.log(result);
+            if(result[0]==undefined){
+                return "Email incorrecto"
+            }
+            if(bcrypt.compareSync(Usuario.password, result[0].password)){
+                console.log("true")
+                result[0].token= await tokenService.getToken(result[0]);
+                console.log(result[0])
+                return result;
+            }else{
+                console.log("false")
+                return "Error, reintentar";
+            }
+        }
+        catch(error){
+            return error
+        }
     }
 }

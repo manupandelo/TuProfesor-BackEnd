@@ -6,7 +6,6 @@ import AlumnoRouter from './src/Controllers/AlumnoController.js';
 import ProfesorRouter from './src/Controllers/ProfesorController.js';
 import PeticionRouter from './src/Controllers/PeticionController.js';
 import ReviewRouter from './src/Controllers/ReviewController.js';
-import UsuarioRouter from './src/Controllers/UsuarioController.js';
 
 
 const port=3000;
@@ -17,8 +16,6 @@ app.use(cors());
 //passport.use(jwtStrategy);
 //app.use(passport.initialize());
 
-
-app.use("/users", UsuarioRouter);
 app.use("/students", AlumnoRouter)
 app.use("/teachers", ProfesorRouter);
 app.use("/peticiones", PeticionRouter);
