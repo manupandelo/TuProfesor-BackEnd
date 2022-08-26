@@ -19,7 +19,7 @@ export class ProfesorService {
         }   
     }
     
-    getProfesor = async (ubicacion, materia, tipo, activo) => {
+    getProfesor = async (ubicacion, materia, tipo) => {
         try{
             console.log('Get all Profesores by user preferences in Profesor Service');
             let query=`SELECT * from profesor join tipoclase on profesor.tipo=tipoclase.idTipo`; 
@@ -112,14 +112,13 @@ export class ProfesorService {
 
     createProfesor = async (Profesor) => {
         console.log('Create New Profesor in Profesor Service');
-        const id=Profesor.idUser;
-        let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, idUser) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         let query2=`select * from Usuario where id=?`
         const [responsetype,fields] = await connection.execute(query2,[id]);
         console.log(responsetype)//responsetype=await UsuarioHelper({id},query2)
         console.log(responsetype[0].tipo)
         if(responsetype[0].tipo==true){
-            const [result,fields] = await connection.execute(query,[Profesor.nombre, Profesor.apellido, Profesor.borndate, Profesor.ubicacion, Profesor.telefono, Profesor.activo, Profesor.disponibilidad, Profesor.tipo, id]);
+            const [result,fields] = await connection.execute(query,[Profesor.nombre, Profesor.apellido, Profesor.borndate, Profesor.ubicacion, Profesor.telefono, Profesor.activo, Profesor.disponibilidad, Profesor.tipo, Profesor.email, Profesor.password]);
             console.log("Rows affected: " + result.rowsAffected);
             console.log(result);
             return result;

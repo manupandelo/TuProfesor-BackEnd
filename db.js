@@ -8,9 +8,4 @@ var connection = await mysql.createConnection({
   database: process.env.base
 });
 
-connection.connect(function(err) {
-  if (err) throw err;
-  console.log("Database Connected!");
-});
-
 export default connection;

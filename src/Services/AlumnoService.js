@@ -63,13 +63,14 @@ export class AlumnoService {
     createAlumno = async (Alumno) => {
         try{
             console.log('Create New Alumno in Alumno Service');
-            let id=Alumno.idUser;
-            let query=`INSERT INTO Alumno(ubicacion, nombre, apellido, idUser) VALUES (?, ?, ?, ?)`
+            let query=`INSERT INTO Alumno(ubicacion, nombre, apellido, email, password, telefono) VALUES (?, ?, ?, ?, ?, ?)`
             let query2=`select * from Usuario where id=?`
+            
+            
             const [responsetype,fields] = await connection.execute(query2,[id]);
             console.log(responsetype.recordset[0].tipo)
             if(responsetype.recordset[0].tipo==true){
-                const [result,fields] = await connection.execute(query,[Alumno.ubicacion, Alumno.nombre, Alumno.apellido, id]);
+                const [result,fields] = await connection.execute(query,[Alumno.ubicacion, Alumno.nombre, Alumno.apellido, Alumno.email, Alumno.password, Alumno.telefono]);
                 console.log("Row affected: " + result.rowsAffected);
                 console.log(result);
                 return result;
