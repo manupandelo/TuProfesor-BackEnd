@@ -20,7 +20,7 @@ export class PeticionService {
     getPeticionById = async (id) => {
         try{
             console.log('Get Peticion by its ID');
-            let query=`SELECT Profesor.nombre, Profesor.apellido, Peticion.horario, Alumno.nombre from Peticion inner join Usuario on Peticion.idAlumno=Usuario.id inner join Alumno on Usuario.id=Alumno.idUser inner join Profesor on Peticion.idProfesor=Profesor.id where idPeticion = ?`;
+            let query=`SELECT Profesor.nombre, Profesor.apellido, Peticion.horario, Alumno.nombre from Peticion inner join Alumno on Peticion.idAlumno=Alumno.id inner join Profesor on Peticion.idProfesor=Profesor.id where idPeticion = ?`;
             const [result,fields] = await connection.execute(query,[id]);
             console.log(result);
             return result;
@@ -34,8 +34,8 @@ export class PeticionService {
         try{
             console.log('create Peticion in Peticion Service');
             console.log(Peticion);
-            let query=`INSERT INTO Peticion(idUserAlumno, idProfesor, detalles, horario) VALUES (?,?,?,?)`
-            const [result,fields] = await connection.execute(query,[Peticion.idUserAlumno, Peticion.idProfesor, Peticion.detalles, Peticion.horario]);
+            let query=`INSERT INTO Peticion(idAlumno, idProfesor, descripcion, horario, estado) VALUES (?,?,?,?,1)`
+            const [result,fields] = await connection.execute(query,[Peticion.idAlumno, Peticion.idProfesor, Peticion.detalles, Peticion.horario]);
             console.log("Row affected: " + result.rowsAffected);
             console.log(result);
             return result;

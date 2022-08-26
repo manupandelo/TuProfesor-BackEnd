@@ -64,18 +64,16 @@ export class AlumnoService {
         try{
             console.log('Create New Alumno in Alumno Service');
             let query=`INSERT INTO Alumno(ubicacion, nombre, apellido, email, password, telefono) VALUES (?, ?, ?, ?, ?, ?)`
-            let query2=`select * from Usuario where id=?`
-            
-            
-            const [responsetype,fields] = await connection.execute(query2,[id]);
-            console.log(responsetype.recordset[0].tipo)
-            if(responsetype.recordset[0].tipo==true){
+            let query2=`select * from Alumno where email=?`
+            const [responsetype,fields] = await connection.execute(query2,[Alumno.email]);
+            console.log(responsetype[0])
+            if(responsetype[0]==undefined){
+                return "Fallo";
+            }else{
                 const [result,fields] = await connection.execute(query,[Alumno.ubicacion, Alumno.nombre, Alumno.apellido, Alumno.email, Alumno.password, Alumno.telefono]);
                 console.log("Row affected: " + result.rowsAffected);
                 console.log(result);
                 return result;
-            }else{
-                return "Fallo";
             }
         }
         catch(error){

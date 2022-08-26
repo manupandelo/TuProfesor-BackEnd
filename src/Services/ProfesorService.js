@@ -114,18 +114,18 @@ export class ProfesorService {
     createProfesor = async (Profesor) => {
         console.log('Create New Profesor in Profesor Service');
         let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        let query2=`select * from Usuario where id=?`
-        const [responsetype,fields] = await connection.execute(query2,[id]);
+        let query2=`select * from Profesor where email=?`
+        const [responsetype,fields] = await connection.execute(query2,[Profesor.email]);
         console.log(responsetype)//responsetype=await UsuarioHelper({id},query2)
-        console.log(responsetype[0].tipo)
-        if(responsetype[0].tipo==true){
+        console.log(responsetype[0])
+        if(responsetype[0]==undefined){
+            return "Fallo";
+        }
+        else{
             const [result,fields] = await connection.execute(query,[Profesor.nombre, Profesor.apellido, Profesor.borndate, Profesor.ubicacion, Profesor.telefono, Profesor.activo, Profesor.disponibilidad, Profesor.tipo, Profesor.email, Profesor.password]);
             console.log("Rows affected: " + result.rowsAffected);
             console.log(result);
             return result;
-        }
-        else{
-            return "Fallo";
         }
     }
 
