@@ -1,5 +1,6 @@
 import 'dotenv/config'
-import connection from '../../db.js'
+import con from '../../db.js'
+const connection = con
 
 export class PeticionService {
 

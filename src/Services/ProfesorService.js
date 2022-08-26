@@ -1,9 +1,10 @@
 import 'dotenv/config'
 import { TokenService } from './TokenService.js';
 import bcrypt from 'bcryptjs';
-import connection from '../../db.js'
+import con from '../../db.js'
 
 const tokenService = new TokenService();
+const connection = con
 
 export class ProfesorService {
 
