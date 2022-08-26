@@ -73,7 +73,7 @@ router.post('/login', async (req, res) => {
   if(!req.body.email || !req.body.password){
     return res.status(400).json("Error, llenar los datos por completo");
   }else{
-    const response = await alumnoService.LogIn(req.body);
+    const response = await alumnoService.login(req.body);
     console.log(response)
     return res.status(200).json(response);
   }
