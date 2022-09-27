@@ -45,7 +45,7 @@ router.get('/peticion/:id', /*Authenticate,*/ async (req, res) => {
 
 router.post('/register', /*Authenticate,*/ async (req, res) => {
   console.log(`This is a post operation`);
-  if(!req.body.email || !req.body.password || !req.body.nombre || !req.body.apellido || !req.body.borndate || !req.body.ubicacion || !req.body.telefono || !req.body.activo || !req.body.disponibilidad || !req.body.tipo){
+  if(!req.body.email || !req.body.password || !req.body.nombre || !req.body.apellido || !req.body.borndate || !req.body.ubicacion || !req.body.telefono || !req.body.disponibilidad || !req.body.tipo){
     return res.status(400).json("Llenar todos los datos");
   }
   else{
