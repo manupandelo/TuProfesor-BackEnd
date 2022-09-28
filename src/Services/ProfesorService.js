@@ -229,7 +229,7 @@ export class ProfesorService {
                 return result;
             }else{
                 console.log("false")
-                return "Error, reintentar";
+                return false;
             }
         }
         catch(error){
