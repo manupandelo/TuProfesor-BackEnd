@@ -112,7 +112,7 @@ export class ProfesorService {
 
     createProfesor = async (Profesor) => {
         console.log('Create New Profesor in Profesor Service');
-        let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, email, password) VALUES (?, ?, ?, ?, 1, ?, ?, ?, ?)`;
         let query2=`select * from Profesor where email=?`
         const [responsetype,fields] = await connection.execute(query2,[Profesor.email]);
        //responsetype=await UsuarioHelper({id},query2)
