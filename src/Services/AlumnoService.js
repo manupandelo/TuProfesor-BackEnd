@@ -70,6 +70,7 @@ export class AlumnoService {
             if(responsetype[0]!=undefined){
                 return "Fallo";
             }else{
+                Alumno.password = await bcrypt.hash(Alumno.password, 10);
                 const [result,fields] = await connection.execute(query,[Alumno.ubicacion, Alumno.nombre, Alumno.apellido, Alumno.email, Alumno.password, Alumno.telefono]);
                 console.log("Row affected: " + result.rowsAffected);
                 console.log(result);
@@ -113,6 +114,7 @@ export class AlumnoService {
                     comma=true;
                     values.push(Alumno.password);
                 }
+                Alumno.password = await bcrypt.hash(Alumno.password, 10);
                 count++
             }
             // dejo por el dia en el que haya que meter mas datos

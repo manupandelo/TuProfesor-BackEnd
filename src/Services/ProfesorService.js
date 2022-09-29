@@ -20,7 +20,7 @@ export class ProfesorService {
         }   
     }
     
-    getProfesor = async (ubicacion, materia, tipo) => {
+    getProfesor = async (filtros) => {
         try{
             console.log('Get all Profesores by user preferences in Profesor Service');
             let query=`SELECT profesor.id, profesor.nombre, profesor.apellido, profesor.disponibilidad, profesor.telefono, profesor.ubicacion, profesor.email, tipoclase.tipo, materia.Materia from profesor join tipoclase on profesor.tipo=tipoclase.idTipo join materiaxprofesor on profesor.id = materiaxprofesor.idProfesor join materia on materiaxprofesor.idMateria=materia.id`; 
@@ -28,27 +28,27 @@ export class ProfesorService {
             let agregar=''
             let before=''
             let values=[];
-            if(materia){
+            if(filtros.materia){
                 where = true;
                 agregar+=`materia.Materia=?`
-                values.push(materia)
-            }if(ubicacion){
+                values.push(filtros.materia)
+            }if(filtros.ubicacion){
                 if(where){
                     agregar+=` and ubicacion=?`;
-                    values.push(ubicacion)
+                    values.push(filtros.ubicacion)
                 }else{
                     where=true
                     agregar+=`ubicacion=? `
-                    values.push(ubicacion)
+                    values.push(filtros.ubicacion)
                 }
-            }if(tipo){
+            }if(filtros.tipo){
                 if(where){
                     agregar+=` and tipoclase.tipo=?`;
-                    values.push(tipo)
+                    values.push(filtros.tipo)
                 }else{
                     where=true
                     agregar+=`tipoclase.tipo=? `
-                    values.push(tipo)
+                    values.push(filtros.tipo)
                 }
             }
             if(where){
@@ -121,6 +121,7 @@ export class ProfesorService {
         }
         else{
             console.log(Profesor)
+            Profesor.password = await bcrypt.hash(Profesor.password, 10);
             const [result,fields] = await connection.execute(query,[Profesor.nombre, Profesor.apellido, Profesor.borndate, Profesor.ubicacion, Profesor.telefono, Profesor.disponibilidad, Profesor.tipo, Profesor.email, Profesor.password]);
             console.log("Rows affected: " + result.rowsAffected);
             console.log(result);
@@ -181,6 +182,7 @@ export class ProfesorService {
                     comma=true;
                     values.push(Profesor.password);
                 }
+                Profesor.password = await bcrypt.hash(Profesor.password, 10);
                 count++;
             }
             if(count==0){return "Nada que cambiar"}
