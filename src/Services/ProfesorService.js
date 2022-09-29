@@ -115,10 +115,10 @@ export class ProfesorService {
         let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, activo, disponibilidad, tipo, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         let query2=`select * from Profesor where email=?`
         const [responsetype,fields] = await connection.execute(query2,[Profesor.email]);
-        console.log(responsetype)//responsetype=await UsuarioHelper({id},query2)
+       //responsetype=await UsuarioHelper({id},query2)
         console.log(responsetype[0])
-        if(responsetype[0]==undefined){
-            return "Fallo";
+        if(responsetype[0]!=undefined){
+            return "El usuario ya existe";
         }
         else{
             const [result,fields] = await connection.execute(query,[Profesor.nombre, Profesor.apellido, Profesor.borndate, Profesor.ubicacion, Profesor.telefono, Profesor.activo, Profesor.disponibilidad, Profesor.tipo, Profesor.email, Profesor.password]);
