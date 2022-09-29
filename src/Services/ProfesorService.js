@@ -220,7 +220,7 @@ export class ProfesorService {
             const [result,fields] = await connection.execute(query,[Usuario.email]);
             console.log(result);
             if(result[0]==undefined){
-                return "Email incorrecto"
+                return false
             }
             if(bcrypt.compareSync(Usuario.password, result[0].password)){
                 console.log("true")
