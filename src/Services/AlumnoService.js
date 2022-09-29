@@ -67,7 +67,7 @@ export class AlumnoService {
             let query2=`select * from Alumno where email=?`
             const [responsetype,fields] = await connection.execute(query2,[Alumno.email]);
             console.log(responsetype[0])
-            if(responsetype[0]==undefined){
+            if(responsetype[0]!=undefined){
                 return "Fallo";
             }else{
                 const [result,fields] = await connection.execute(query,[Alumno.ubicacion, Alumno.nombre, Alumno.apellido, Alumno.email, Alumno.password, Alumno.telefono]);
