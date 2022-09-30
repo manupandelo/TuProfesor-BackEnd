@@ -37,7 +37,7 @@ export class AlumnoService {
     getPeticionByUserId = async (id) => {
        try{
         console.log('Get Peticion by the User Id');
-        let query=`SELECT Peticion.idPeticion, Peticion.Horario, Peticion.Estado, Profesor.nombre, Profesor.apellido from Peticion join Alumno on Peticion.idAlumno=Alumno.id where idAlumno = ?`
+        let query=`SELECT Peticion.idPeticion, Peticion.Horario, Peticion.Estado, Profesor.nombre, Profesor.apellido from Peticion join Profesor on Peticion.idProfesor=Profesor.id where idAlumno = ?`
         const [result,fields] = await connection.execute(query,[id]);
         console.log(result);
         return result;
