@@ -49,26 +49,47 @@ export class PeticionService {
         try{
             console.log('Update Peticion by Id in Peticion Service');
             console.log(id, Peticion)
-            let variables;
-            let query;
-            if(!Peticion.detalles){
-                if(!Peticion.horario){
-                   return "Nada que cambiar";
-                }else{
-                    query=`update Peticion SET horario=? where idPeticion=?`
-                    variables=[Peticion.horario, id]
-                }
+            let variables=[];
+            let query=`update Peticion SET`;
+            let count=0;
+            let comma
+            if(Peticion.detalles){
+                query+=` detalles=?`
+                variables.push(Peticion.detalles)
+                comma=true;
+                count++;
             }
-            else{
-                if(!Peticion.horario){
-                    query=`update Peticion SET detalles=? where idPeticion=?`
-                    variables=[Peticion.detalles, id]
+            if(Peticion.horario){
+                if(Peticion.horario>24 || Peticion.horario<1){
+                    return "Error cargando horario"
                 }
                 else{
-                    query=`UPDATE Peticion SET detalles=?, horario=? WHERE idPeticion = ?`;
-                    variables=[Peticion.detalles, Peticion.horario, id]
+                    if(comma==true){
+                        query+=`, horario=?`
+                    }
+                    else{
+                        query+=` horario=?`
+                        comma=true
+                    }
+                    variables.push(Peticion.horario)
+                    count++;
                 }
             }
+            if(!Peticion.estado){
+                if(comma==true){
+                    query+=`, Estado=?`
+                }
+                else{
+                    query+=` Estado=?`
+                    comma=true
+                }
+                variables.push(Peticion.estado)
+                count++;
+            }
+            if(count==0){
+                return "nada q cambiar"
+            }
+            
             const [result,fields] = await connection.execute(query,variables);
             console.log("Rows affected: " + result.rowsAffected);
             console.log(result);
