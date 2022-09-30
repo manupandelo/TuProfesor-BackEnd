@@ -55,6 +55,7 @@ export class ProfesorService {
                 query+=before + " WHERE " + agregar 
             }
             console.log(query)
+            console.log(values)
             const [result,fields] = await connection.execute(query,values);
             console.log(result);
             return result;
