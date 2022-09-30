@@ -20,7 +20,7 @@ export class ProfesorService {
         }   
     }
     
-    getProfesor = async (filtros) => {
+    getProfesor = async (materia, ubicacion, tipo) => {
         try{
             console.log('Get all Profesores by user preferences in Profesor Service');
             let query=`SELECT profesor.id, profesor.nombre, profesor.apellido, profesor.disponibilidad, profesor.telefono, profesor.ubicacion, profesor.email, tipoclase.tipo, materia.Materia from profesor join tipoclase on profesor.tipo=tipoclase.idTipo join materiaxprofesor on profesor.id = materiaxprofesor.idProfesor join materia on materiaxprofesor.idMateria=materia.id`; 
@@ -28,27 +28,27 @@ export class ProfesorService {
             let agregar=''
             let before=''
             let values=[];
-            if(filtros.materia){
+            if(materia){
                 where = true;
                 agregar+=`materia.Materia=?`
-                values.push(filtros.materia)
-            }if(filtros.ubicacion){
+                values.push(materia)
+            }if(ubicacion){
                 if(where){
                     agregar+=` and ubicacion=?`;
-                    values.push(filtros.ubicacion)
+                    values.push(ubicacion)
                 }else{
                     where=true
                     agregar+=`ubicacion=? `
-                    values.push(filtros.ubicacion)
+                    values.push(ubicacion)
                 }
-            }if(filtros.tipo){
+            }if(tipo){
                 if(where){
                     agregar+=` and tipoclase.tipo=?`;
-                    values.push(filtros.tipo)
+                    values.push(tipo)
                 }else{
                     where=true
                     agregar+=`tipoclase.tipo=? `
-                    values.push(filtros.tipo)
+                    values.push(tipo)
                 }
             }
             if(where){

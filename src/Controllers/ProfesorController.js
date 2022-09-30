@@ -7,7 +7,7 @@ const profesorService = new ProfesorService();
 
 router.get('', async (req, res) => {
   console.log(`This is a get operation`);
-  const Profesors = await profesorService.getProfesor([req.query.ubicacion, req.query.materia, req.query.tipo, req.query.activo]);
+  const Profesors = await profesorService.getProfesor(req.query.materia, req.query.ubicacion, req.query.tipo);
   return res.status(200).json(Profesors);
 });
 
