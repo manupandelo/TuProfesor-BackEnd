@@ -43,11 +43,11 @@ export class ProfesorService {
                 }
             }if(tipo){
                 if(where){
-                    agregar+=` and tipoclase.id=?`;
+                    agregar+=` and tipoclase.idTipo=?`;
                     values.push(tipo)
                 }else{
                     where=true
-                    agregar+=`tipoclase.id=? `
+                    agregar+=`tipoclase.idTipo=? `
                     values.push(tipo)
                 }
             }
