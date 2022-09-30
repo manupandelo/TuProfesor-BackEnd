@@ -38,7 +38,7 @@ router.get('/peticion/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`Get Peticiones from Teacher`);
 
-  const Peticion = await profesorService.getPeticionById(req.params.id);
+  const Peticion = await profesorService.getPeticionByTeacherId(req.params.id);
 
   return res.status(200).json(Peticion);
 });
