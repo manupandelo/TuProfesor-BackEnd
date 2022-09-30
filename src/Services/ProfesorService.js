@@ -30,7 +30,7 @@ export class ProfesorService {
             let values=[];
             if(materia){
                 where = true;
-                agregar+=`materia.Materia=?`
+                agregar+=`materia.id=?`
                 values.push(materia)
             }if(ubicacion){
                 if(where){
