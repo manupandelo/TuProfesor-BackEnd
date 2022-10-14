@@ -12,10 +12,10 @@ router.get('', /*Authenticate,*/ async (req, res) => {
 });
 
 router.get('/id/:id', /*Authenticate,*/ async (req, res) => {
-  console.log(`Request URL Param: ${req.params.id}`);
+  console.log(`Request URL Param: ${req.params}`);
   console.log(`This is a get operation`);
 
-  const Peticion = await peticionService.getPeticionById(req.params.id);
+  const Peticion = await peticionService.getPeticionById(req.params);
 
   return res.status(200).json(Peticion);
 });
