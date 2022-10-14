@@ -25,6 +25,7 @@ router.get('/peticion/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Get Peticiones from an user`);
 
   const Peticion = await alumnoService.getPeticionByUserId(req.params.id);
+  console.log(Peticion)
 
   return res.status(200).json(Peticion);
 });
