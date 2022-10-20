@@ -53,7 +53,7 @@ export class PeticionService {
             let query=`update Peticion SET`;
             let count=0;
             let comma
-            if(Peticion.estado){
+            if(Peticion.Estado){
                 query+=` Estado=?`
                 variables.push(Peticion.estado)
                 comma=true;
