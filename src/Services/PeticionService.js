@@ -55,7 +55,7 @@ export class PeticionService {
             let comma
             if(Peticion.Estado){
                 query+=` Estado=?`
-                variables.push(Peticion.estado)
+                variables.push(Peticion.Estado)
                 comma=true;
                 count++;
             }
