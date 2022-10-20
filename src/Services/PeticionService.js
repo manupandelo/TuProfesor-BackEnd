@@ -45,7 +45,7 @@ export class PeticionService {
         }   
     }
 
-    updatePeticionById = async (id, estado) => {
+    updatePeticionById = async (id, Peticion) => {
         try{
             console.log('Update Peticion by Id in Peticion Service');
             console.log(id, Peticion)
@@ -53,7 +53,7 @@ export class PeticionService {
             let query=`update Peticion SET`;
             let count=0;
             let comma
-            if(estado){
+            if(Peticion.estado){
                 query+=` Estado=?`
                 variables.push(Peticion.estado)
                 comma=true;
