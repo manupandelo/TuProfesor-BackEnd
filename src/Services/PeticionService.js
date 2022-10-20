@@ -90,7 +90,8 @@ export class PeticionService {
                 console.log("esta llegando undefined o esta mal el query")
                 return "nada q cambiar"
             }
-            
+            variables.push(id)
+            query+=` where idPeticion=?`
             const [result,fields] = await connection.execute(query,variables);
             console.log("Rows affected: " + result.rowsAffected);
             console.log(result);
