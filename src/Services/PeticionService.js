@@ -45,7 +45,7 @@ export class PeticionService {
         }   
     }
 
-    updatePeticionById = async (id, Peticion) => {
+    updatePeticionById = async (id, estado) => {
         try{
             console.log('Update Peticion by Id in Peticion Service');
             console.log(id, Peticion)
@@ -53,13 +53,13 @@ export class PeticionService {
             let query=`update Peticion SET`;
             let count=0;
             let comma
-            if(Peticion.detalles){
-                query+=` detalles=?`
-                variables.push(Peticion.detalles)
+            if(estado){
+                query+=` Estado=?`
+                variables.push(Peticion.estado)
                 comma=true;
                 count++;
             }
-            if(Peticion.horario){
+            /*if(Peticion.horario){
                 if(Peticion.horario>24 || Peticion.horario<1){
                     return "Error cargando horario"
                 }
@@ -85,7 +85,7 @@ export class PeticionService {
                 }
                 variables.push(Peticion.estado)
                 count++;
-            }
+            }*/
             if(count==0){
                 return "nada q cambiar"
             }
