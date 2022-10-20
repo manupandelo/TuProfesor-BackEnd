@@ -33,6 +33,7 @@ router.post('', /*Authenticate,*/ async (req, res) => {
 
 router.put('/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
+  console.log(`Request Body:, ${req.body}`);
   console.log(`Update Peticion`);
 
   const Peticion = await peticionService.updatePeticionById(req.params.id, req.body);
