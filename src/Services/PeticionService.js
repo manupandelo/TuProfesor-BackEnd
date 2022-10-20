@@ -87,6 +87,7 @@ export class PeticionService {
                 count++;
             }*/
             if(count==0){
+                console.log("esta llegando undefined o esta mal el query")
                 return "nada q cambiar"
             }
             
