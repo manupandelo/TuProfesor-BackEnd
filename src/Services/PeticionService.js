@@ -52,11 +52,11 @@ export class PeticionService {
             let variables=[];
             let query=`update Peticion SET`;
             let count=0;
-            let comma
+            //let comma;
             if(Peticion.Estado){
                 query+=` Estado=?`
                 variables.push(Peticion.Estado)
-                comma=true;
+                //comma=true;
                 count++;
             }
             /*if(Peticion.horario){
