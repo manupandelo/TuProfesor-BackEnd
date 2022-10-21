@@ -17,6 +17,12 @@ router.get('/activos', async (req, res) => {
   return res.status(200).json(Profesors);
 });
 
+router.get('/mail/:mail', async (req, res) => {
+  console.log(`This is a get operation`);
+  const Profesors = await profesorService.getProfesoresbyMail(req.params.mail);
+  return res.status(200).json(Profesors);
+});
+
 router.get('/id/:id', /*Authenticate,*/ async (req, res) => {
   console.log(`Request URL Param: ${req.params.id}`);
   console.log(`This is a get operation`);

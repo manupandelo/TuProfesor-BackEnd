@@ -111,6 +111,19 @@ export class ProfesorService {
         }   
     }
 
+    getProfesorByMail = async (email) => {
+        try{
+            console.log('Get Profesor by its email in Profesor Service');
+            let query=`Select * from profesor where email=?`
+            const [result,fields] = await connection.execute(query,[email]);
+            console.log(result);
+            return result;
+        }
+        catch(error){
+            return error;
+        }
+    }
+
     createProfesor = async (Profesor) => {
         console.log('Create New Profesor in Profesor Service');
         let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, disponibilidad, tipo, email, password, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`;
