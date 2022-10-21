@@ -19,7 +19,7 @@ router.get('/activos', async (req, res) => {
 
 router.get('/mail/:mail', async (req, res) => {
   console.log(`This is a get operation`);
-  const Profesors = await profesorService.getProfesorbyMail(req.params.mail);
+  const Profesors = await profesorService.getProfesorByMail(req.params.mail);
   return res.status(200).json(Profesors);
 });
 
