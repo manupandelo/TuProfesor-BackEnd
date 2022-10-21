@@ -239,4 +239,21 @@ export class ProfesorService {
             return error
         }
     }
+
+    AgregarMaterias = async (id, materia) => {
+        try{
+            console.log("Materia: " + materia);
+            console.log("id: " + id);
+            let query=`Insert into materiaxprofesor(idProfesor, idMateria) values (?,?)`;
+            const [result,fields] = await connection.execute(query,[id, materia]);
+            console.log("Rows affected: " + result.rowsAffected);
+            console.log(result);
+            return result;
+        }
+        catch(error){
+            return error
+        }
+    }
 }
+
+

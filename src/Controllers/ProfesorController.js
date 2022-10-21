@@ -86,4 +86,11 @@ router.post('/login', async (req, res) => {
   }
 })
 
+router.post('/materias/:id', /*Authenticate,*/ async (req, res) => {
+  console.log(`This is a post operation`);
+  const Profesor = await profesorService.AgregarMaterias(req.params.id, req.body.materia);
+  return res.status(201).json(Profesor);}
+);
+
 export default router;
+
