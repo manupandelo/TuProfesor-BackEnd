@@ -126,7 +126,7 @@ export class ProfesorService {
 
     createProfesor = async (Profesor) => {
         console.log('Create New Profesor in Profesor Service');
-        let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, disponibilidad, tipo, email, password, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`;
+        let query=`INSERT INTO Profesor(nombre, apellido, borndate, ubicacion, telefono, tipo, email, password, activo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`;
         let query2=`select * from Profesor where email=?`
         const [responsetype,fields] = await connection.execute(query2,[Profesor.email]);
         console.log(responsetype[0])
@@ -134,9 +134,9 @@ export class ProfesorService {
             return "El usuario ya existe";
         }
         else{
-            console.log(Profesor)
+            console.log(Profesor);
             Profesor.password = await bcrypt.hash(Profesor.password, 10);
-            const [result,fields] = await connection.execute(query,[Profesor.nombre, Profesor.apellido, Profesor.borndate, Profesor.ubicacion, Profesor.telefono, Profesor.disponibilidad, Profesor.tipo, Profesor.email, Profesor.password]);
+            const [result,fields] = await connection.execute(query,[Profesor.nombre, Profesor.apellido, Profesor.borndate, Profesor.ubicacion, Profesor.telefono, Profesor.tipo, Profesor.email, Profesor.password]);
             console.log("Rows affected: " + result.rowsAffected);
             console.log(result);
             return result;
