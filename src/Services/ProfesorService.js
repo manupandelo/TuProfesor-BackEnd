@@ -23,7 +23,7 @@ export class ProfesorService {
     getProfesor = async (materia, ubicacion, tipo) => {
         try{
             console.log('Get all Profesores by user preferences in Profesor Service');
-            let query=`SELECT profesor.id, profesor.nombre, profesor.apellido, profesor.disponibilidad, profesor.telefono, profesor.ubicacion, profesor.email, tipoclase.tipo, materia.Materia from profesor join tipoclase on profesor.tipo=tipoclase.idTipo join materiaxprofesor on profesor.id = materiaxprofesor.idProfesor join materia on materiaxprofesor.idMateria=materia.id`; 
+            let query=`SELECT profesor.id, profesor.nombre, profesor.apellido, profesor.telefono, profesor.ubicacion, profesor.email, tipoclase.tipo, materia.Materia from profesor join tipoclase on profesor.tipo=tipoclase.idTipo join materiaxprofesor on profesor.id = materiaxprofesor.idProfesor join materia on materiaxprofesor.idMateria=materia.id`; 
             let where=false
             let agregar=''
             let before=''
